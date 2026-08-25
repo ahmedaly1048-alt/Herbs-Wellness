@@ -8,13 +8,13 @@ import Navigation from '../components/Navigation';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 const navLeft = [
-  { name: 'about', href: '#about' },
+  { name: 'about', href: '/about' },
   { name: 'blog', href: '#blog' },
 ];
 
 const navRight = [
-  { name: 'contact', href: '#contact' },
-  { name: 'appointment', href: '#appointment' },
+  { name: 'contact', href: '/hub/consultation' },
+  { name: 'appointment', href: '/hub/consultation' },
 ];
 
 export default function Home() {
