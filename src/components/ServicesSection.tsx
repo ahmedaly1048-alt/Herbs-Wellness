@@ -18,21 +18,21 @@ const servicesData: ServiceItem[] = [
     title: 'Holistic Health Assessment',
     description:
       'We offer a personalized assessment of your health concerns and goals, that blends the best of herbal medicine with the precision of modern science. We’ll conduct a thorough review of your medical history',
-    image: '', // Replace with path e.g. "/services/assessment.jpg"
+    image: '/s1 (2).jpg', // Replace with path e.g. "/services/assessment.jpg"
   },
   {
     id: '2',
     title: 'Naturopathic Medicine',
     description:
       'Naturopathy is a holistic approach to your wellness. By finding the root cause of your symptoms and emphasizing on individualized treatments, we strive to optimize your health. Our approaches include',
-    image: '', // Replace with path e.g. "/services/naturopathy.jpg"
+    image: '/s2.jpg', // Replace with path e.g. "/services/naturopathy.jpg"
   },
   {
     id: '3',
     title: 'Holistic Nutrition',
     description:
       'Guiding you to a lifestyle and dietary change according to your body constituents and individual needs focusing on gut health, optimal bodily function and disease prevention and reversal.',
-    image: '', // Replace with path e.g. "/services/nutrition.jpg"
+    image: '/s3.jpg', // Replace with path e.g. "/services/nutrition.jpg"
   },
 ];
 

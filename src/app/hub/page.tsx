@@ -107,7 +107,7 @@ export default function HubPage() {
               <Link href="/hub#services" className="hover:text-[#88B04B] transition-colors">
                 Services
               </Link>
-              <Link href="/hub#contact" className="hover:text-[#88B04B] transition-colors">
+              <Link href="/hub/consultation" className="hover:text-[#88B04B] transition-colors">
                 Contact
               </Link>
               <Link href="/shop" className="hover:text-[#88B04B] transition-colors">
