@@ -13,8 +13,8 @@ const navLeft = [
 ];
 
 const navRight = [
-  { name: 'contact', href: '/hub/consultation' },
-  { name: 'appointment', href: '/hub/consultation' },
+  { name: 'contact', href: '/hub/booking' },
+  { name: 'appointment', href: '/hub/booking' },
 ];
 
 export default function Home() {

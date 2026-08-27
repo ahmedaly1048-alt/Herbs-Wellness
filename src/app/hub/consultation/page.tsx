@@ -1,208 +1,123 @@
 'use client';
 
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
+import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
-import { Mail, Phone, Leaf } from 'lucide-react';
-import { FaInstagram } from 'react-icons/fa';
+import { ArrowLeft } from 'lucide-react';
+import Footer from '@/src/components/Footer';
 import WhatsAppButton from '@/src/components/WhatsAppButton';
+import ShopNavbar from '@/src/components/ShopNavbar';
 
 export default function ConsultationPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [subtotal, setSubtotal] = useState<number>(0);
-
-  useGSAP(
-    () => {
-      gsap.fromTo(
-        '#consultation-content',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }
-      );
-    },
-    { scope: containerRef }
-  );
-
-  const handleBookNow = () => {
-    setSubtotal(20000);
+  const handleConsultationPayment = () => {
+    alert('Redirecting to Paystack for Clinical Consultation (₦30,000.00)...');
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen w-full bg-white text-stone-800 font-sans flex flex-col justify-between">
+    <div className="min-h-screen bg-stone-50/50 text-stone-800 font-sans flex flex-col justify-between">
       <div>
-        {/* Lime Green Top Contact Bar */}
-        <div className="w-full bg-[#9ACD32] text-white py-2 px-6 text-xs font-medium">
-          <div className="container mx-auto max-w-7xl flex justify-between items-center">
-            <div className="flex items-center gap-6">
-              <a
-                href="mailto:info@herbsandwellnesshub.com"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              >
-                <Mail className="w-3.5 h-3.5" />
-                <span>info@herbsandwellnesshub.com</span>
-              </a>
-              <a
-                href="tel:+2347064836444"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              >
-                <Phone className="w-3.5 h-3.5 fill-current stroke-none" />
-                <span>+2347064836444</span>
-              </a>
-            </div>
+        <ShopNavbar/>
 
-            <div>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="hover:opacity-80 transition-opacity"
-              >
-                <FaInstagram className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
+        <div className="max-w-7xl mx-auto px-6 lg:px-16 pt-8 pb-4">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 text-stone-900 font-semibold text-sm hover:text-[#125821] transition-colors"
+          >
+            <span className="p-1.5 rounded-md border border-stone-200 bg-white shadow-sm">
+              <ArrowLeft className="w-4 h-4" />
+            </span>
+            <span>Services</span>
+          </Link>
         </div>
 
-        {/* Header Nav */}
-        {/* Main Navigation Bar */}
-<header id="hub-nav" className="w-full bg-white border-b border-stone-100 sticky top-0 z-40">
-  <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-    {/* Logo */}
-    <Link href="/" className="flex items-center gap-2">
-      <Leaf className="w-7 h-7 text-[#88B04B]" />
-      <div className="flex flex-col">
-        <span className="text-sm font-black tracking-widest text-stone-900 uppercase leading-none">
-          HERBS & WELLNESS
-        </span>
-        <span className="text-[8px] tracking-widest text-stone-500 uppercase leading-tight">
-          Holistic Integrative Clinic
-        </span>
-      </div>
-    </Link>
-
-    {/* Navigation Links */}
-    <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-stone-700">
-      <Link href="/hub" className="hover:text-[#88B04B] transition-colors">
-        Home
-      </Link>
-      <Link href="/hub/consultation" className="hover:text-[#88B04B] transition-colors">
-        Consultation
-      </Link>
-      <Link href="/hub#herbalist" className="hover:text-[#88B04B] transition-colors">
-        Herbalist
-      </Link>
-      <Link href="/hub#services" className="hover:text-[#88B04B] transition-colors">
-        Services
-      </Link>
-      <Link href="/hub#contact" className="hover:text-[#88B04B] transition-colors">
-        Contact
-      </Link>
-      <Link href="/shop" className="hover:text-[#88B04B] transition-colors">
-        Shop
-      </Link>
-    </nav>
-
-    {/* Appointment CTA */}
-    <Link
-      href="/hub/consultation"
-      className="bg-[#9ACD32] hover:bg-[#88B04B] text-white text-xs font-bold px-5 py-2.5 rounded-full transition-colors duration-200"
-    >
-      Make an Appointment
-    </Link>
-  </div>
-</header>
-
-        {/* Page Title Header */}
-        <section className="w-full py-10 bg-white text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight mb-2">
-            Book Consultation
-          </h1>
-          <p className="text-stone-500 text-xs md:text-sm">
-            Connect with the herbalist
-          </p>
-        </section>
-
-        {/* Breadcrumb Bar */}
-        <div className="w-full bg-[#F7F9F5] py-3 px-6 border-y border-stone-100">
-          <div className="container mx-auto max-w-5xl flex items-center gap-2 text-xs font-medium">
-            <Link href="/hub" className="text-[#9ACD32] hover:underline">
-              Home
-            </Link>
-            <span className="text-stone-400">/</span>
-            <span className="text-stone-800 font-semibold">Book Consultation</span>
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <main id="consultation-content" className="container mx-auto max-w-5xl px-6 py-12">
-          {/* Inner Heading */}
-          <div className="flex flex-col items-center text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-stone-900 tracking-tight mb-3">
-              Connect with the Herbalist
-            </h2>
-            <div className="w-12 h-1 bg-[#9ACD32] rounded-full" />
-          </div>
-
-          {/* Grid Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            {/* Left Card - Consultation Service */}
-            <div className="lg:col-span-2 border border-stone-200 rounded-md p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white shadow-sm">
-              <div className="flex flex-col gap-1">
-                <h3 className="font-bold text-stone-800 text-sm md:text-base uppercase tracking-wide">
-                  CONNECT WITH THE HERBALIST (VIRTUAL)
-                </h3>
-                <span className="text-stone-600 text-sm font-semibold">
-                  ₦20,000.00
-                </span>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleBookNow}
-                className="border border-[#9ACD32] text-[#9ACD32] hover:bg-[#9ACD32] hover:text-white text-xs font-bold px-5 py-2.5 rounded transition-colors duration-200 shrink-0"
-              >
-                Book Now
-              </button>
+        <main className="max-w-7xl mx-auto px-6 lg:px-16 py-6 pb-20">
+          <div className="bg-white rounded-3xl border border-stone-200/70 p-6 md:p-10 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            <div className="lg:col-span-6 relative aspect-square w-full rounded-2xl overflow-hidden bg-stone-100 border border-stone-100">
+              <Image
+                src="/consultation-hero.jpg"
+                alt="Clinical Wellness Consultation"
+                fill
+                priority
+                className="object-cover object-center"
+              />
             </div>
 
-            {/* Right Card - Order Summary */}
-            <div className="border border-[#9ACD32] rounded-md p-6 bg-white shadow-sm flex flex-col gap-6">
-              <h3 className="font-bold text-stone-800 text-xs md:text-sm uppercase tracking-wider">
-                ORDER SUMMARY
-              </h3>
-
-              <div className="border-t border-stone-200 pt-4 flex justify-between items-center text-xs md:text-sm text-stone-700 font-medium">
-                <span>Subtotal</span>
-                <span className="font-bold text-stone-900">
-                  ₦{subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </span>
+            <div className="lg:col-span-6 space-y-6">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-serif font-bold text-stone-900 mb-4">
+                  Start your Consultation
+                </h1>
+                <p className="text-stone-700 text-sm leading-relaxed mb-3">
+                  Begin your journey to root-cause healing, not temporary relief.
+                </p>
+                <p className="text-stone-600 text-sm leading-relaxed font-light">
+                  This is a 1:1 clinical session where we assess your symptoms in depth and create a fully personalized treatment plan — including customized herbal formulations and a structured meal plan tailored to your body.
+                </p>
               </div>
 
-              <button
-                type="button"
-                disabled={subtotal === 0}
-                className="w-full bg-[#9ACD32] hover:bg-[#88B04B] disabled:opacity-50 text-white text-xs font-bold py-3 rounded transition-colors duration-200"
-              >
-                Checkout
-              </button>
+              <div className="space-y-4 pt-2">
+                <h2 className="text-base font-bold text-stone-900">How It Works</h2>
+                <div className="space-y-4 text-xs md:text-sm text-stone-600 leading-relaxed font-light">
+                  <div>
+                    <strong className="text-stone-800 font-semibold block mb-0.5">1. Book Your Session</strong>
+                    <p>Tap Book Service, select your consultant, and choose your preferred date and time.</p>
+                  </div>
+                  <div>
+                    <strong className="text-stone-800 font-semibold block mb-0.5">2. Secure Your Slot (₦30,000)</strong>
+                    <p>Complete your payment via Paystack to confirm your consultation.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <strong className="text-stone-800 font-semibold block">3. 1:1 Deep Diagnostic Call (30–45 mins)</strong>
+                    <p>You'll meet with a Naxawellness specialist to:</p>
+                    <ul className="list-disc list-inside pl-2 space-y-1 text-stone-600">
+                      <li>Understand why your symptoms keep returning</li>
+                      <li>Review your gut, hormones, lifestyle, and triggers</li>
+                      <li>Identify your root cause (not just symptoms)</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-2">
+                    <strong className="text-stone-800 font-semibold block">4. Receive Your Personalized Treatment Plan</strong>
+                    <p>After your consultation, you'll get a custom roadmap designed specifically for you, including:</p>
+                    <ul className="list-disc list-inside pl-2 space-y-1 text-stone-600">
+                      <li>A step-by-step healing plan (Gut → Detox → Hormones → Nervous system)</li>
+                      <li>Customized herbal formulations tailored to your condition</li>
+                      <li>Supplement recommendations with exact dosages</li>
+                      <li>A structured meal plan based on your body and symptoms</li>
+                      <li>Lifestyle guidance for each healing phase</li>
+                      <li>Budget estimate per phase (₦50K–₦70K depending on complexity)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <h2 className="text-base font-bold text-stone-900">What Happens Next</h2>
+                <p className="text-xs md:text-sm text-stone-600 leading-relaxed font-light">
+                  You'll begin your treatment using your custom-made herbal formulations, following a structured plan designed to deliver real, lasting results — not temporary fixes.
+                </p>
+                <p className="text-xs md:text-sm text-stone-800 italic font-medium pt-2">
+                  Every treatment plan is personalized. No two protocols are the same.
+                </p>
+              </div>
+
+              <div className="pt-6 border-t border-stone-200/80 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">TOTAL</span>
+                  <span className="text-xl md:text-2xl font-bold text-stone-900">₦30,000.00</span>
+                </div>
+                <button
+                  onClick={handleConsultationPayment}
+                  className="bg-[#526D53] hover:bg-[#3d533e] text-white text-xs md:text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
+                >
+                  Book Service
+                </button>
+              </div>
             </div>
           </div>
         </main>
       </div>
 
-      {/* Footer */}
-      <footer className="w-full bg-[#F4F5F7] py-6 px-4 text-center border-t border-stone-200">
-        <div className="container mx-auto flex flex-col items-center justify-center gap-1 text-xs text-stone-500 font-medium">
-          <p>
-            © Copyright <span className="font-bold text-stone-800">Herbs & Wellness</span>. All Rights Reserved
-          </p>
-          <p>
-            Developed by <span className="text-[#9ACD32] font-bold">S-WEB</span>
-          </p>
-        </div>
-      </footer>
-
+      <Footer />
       <WhatsAppButton />
     </div>
   );

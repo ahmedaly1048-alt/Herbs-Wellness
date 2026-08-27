@@ -107,7 +107,7 @@ export default function HubPage() {
               <Link href="/hub#services" className="hover:text-[#88B04B] transition-colors">
                 Services
               </Link>
-              <Link href="/hub/consultation" className="hover:text-[#88B04B] transition-colors">
+              <Link href="/hub/booking" className="hover:text-[#88B04B] transition-colors">
                 Contact
               </Link>
               <Link href="/shop" className="hover:text-[#88B04B] transition-colors">
@@ -117,7 +117,7 @@ export default function HubPage() {
 
             {/* Wired Appointment CTA */}
             <Link
-              href="/hub/consultation"
+              href="/hub/booking"
               className="bg-[#9ACD32] hover:bg-[#88B04B] text-white text-xs font-bold px-5 py-2.5 rounded-full transition-colors duration-200"
             >
               Make an Appointment

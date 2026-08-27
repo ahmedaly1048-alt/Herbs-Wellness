@@ -5,53 +5,18 @@ import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { Lock } from 'lucide-react';
 
-interface Product {
-  id: string;
-  name: string;
-  price: string;
-  image: string;
-  type: 'cart' | 'options';
-  href: string;
-}
-
-const products: Product[] = [
-  {
-    id: '1',
-    name: 'Acne Tea',
-    price: '₦20,450.00',
-    image: '', // Replace with your image path (e.g., "/products/acne-tea.jpg")
-    type: 'cart',
-    href: '/shop/acne-tea',
-  },
-  {
-    id: '2',
-    name: 'Adaptogen (Capsules)',
-    price: '₦28,000.00',
-    image: '', // Replace with your image path (e.g., "/products/adaptogen.jpg")
-    type: 'cart',
-    href: '/shop/adaptogen',
-  },
-  {
-    id: '3',
-    name: 'Aparun',
-    price: '₦19,000.00 – ₦35,000.00',
-    image: '', // Replace with your image path (e.g., "/products/aparun.jpg")
-    type: 'options',
-    href: '/shop/aparun',
-  },
-  {
-    id: '4',
-    name: 'Gut Heal Tea',
-    price: '₦30,000.00',
-    image: '', // Replace with your image path (e.g., "/products/gut-heal-tea.jpg")
-    type: 'options',
-    href: '/shop/gut-heal-tea',
-  },
-];
+import { PRODUCTS } from '@/src/data/product';
+import { getProductPriceDisplay } from '@/src/lib/product';
+import type { Product } from '@/src/types/product';
 
 export default function HerbalFavourites() {
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Filter for featured items, or fallback to the first 4 items in your catalog
+  const featuredProducts = PRODUCTS.filter((p: Product) => p.featured);
+  const displayProducts = featuredProducts.length > 0 ? featuredProducts : PRODUCTS.slice(0, 4);
 
   useGSAP(
     () => {
@@ -80,48 +45,69 @@ export default function HerbalFavourites() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="product-card flex flex-col items-center text-center group"
-            >
-              {/* Image Container with Fixed Aspect Ratio */}
-              <div className="relative w-full aspect-square bg-white overflow-hidden shadow-sm mb-5">
-                <Image
-                  src={product.image || '/placeholder-product.jpg'}
-                  alt={product.name}
-                  fill
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
+          {displayProducts.map((product: Product) => {
+            const productHref = `/shop/product/${product.slug}`;
+            const priceDisplay = getProductPriceDisplay(product);
+
+            return (
+              <div
+                key={product.id}
+                className="product-card flex flex-col items-center text-center group justify-between"
+              >
+                <div className="w-full flex flex-col items-center">
+                  {/* Image Container with Fixed Aspect Ratio */}
+                  <Link href={productHref} className="relative w-full aspect-square bg-white overflow-hidden shadow-sm mb-5 block">
+                    <Image
+                      src={product.images[0] || '/placeholder-product.jpg'}
+                      alt={product.title}
+                      fill
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                    />
+                    {product.requiresConsultation && (
+                      <span className="absolute top-2.5 left-2.5 bg-[#0D4018] text-amber-300 text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                        <Lock className="w-2.5 h-2.5" /> Consultation
+                      </span>
+                    )}
+                  </Link>
+
+                  {/* Product Info */}
+                  <h3 className="font-semibold text-stone-900 text-sm md:text-base mb-1.5 group-hover:text-[#0D4018] transition-colors">
+                    <Link href={productHref}>{product.title}</Link>
+                  </h3>
+
+                  <p className="font-bold text-stone-900 text-xs md:text-sm mb-4">
+                    {priceDisplay}
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="w-full flex justify-center pt-2">
+                  {product.requiresConsultation ? (
+                    <Link
+                      href="/hub/consultation"
+                      className="bg-[#093212] hover:bg-[#0D4018] text-amber-300 text-xs font-semibold px-5 py-2.5 rounded-full transition-colors duration-200 inline-flex items-center gap-1.5"
+                    >
+                      <Lock className="w-3 h-3" /> Book Consultation
+                    </Link>
+                  ) : product.isVariable ? (
+                    <Link
+                      href={productHref}
+                      className="bg-[#0D4018] hover:bg-[#082b10] text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-colors duration-200 inline-block"
+                    >
+                      Select options
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className="bg-[#0D4018] hover:bg-[#082b10] text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-colors duration-200"
+                    >
+                      Add to cart
+                    </button>
+                  )}
+                </div>
               </div>
-
-              {/* Product Info */}
-              <h3 className="font-semibold text-stone-900 text-sm md:text-base mb-1.5">
-                {product.name}
-              </h3>
-
-              <p className="font-bold text-stone-900 text-xs md:text-sm mb-4">
-                {product.price}
-              </p>
-
-              {/* Action Button */}
-              {product.type === 'cart' ? (
-                <button
-                  type="button"
-                  className="bg-[#0D4018] hover:bg-[#082b10] text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-colors duration-200"
-                >
-                  Add to cart
-                </button>
-              ) : (
-                <Link
-                  href={product.href}
-                  className="bg-[#0D4018] hover:bg-[#082b10] text-white text-xs font-semibold px-5 py-2.5 rounded-full transition-colors duration-200 inline-block"
-                >
-                  Select options
-                </Link>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
