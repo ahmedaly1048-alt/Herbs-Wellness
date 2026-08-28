@@ -45,4 +45,5 @@ export type Product = {
   reviewsList?: ProductReview[]; // Reviews specific to this item
   sku?: string;
   weight?: string;
+  stock?: number; // Quantity on hand; 0 = out of stock. Undefined = treat as in stock.
 };
