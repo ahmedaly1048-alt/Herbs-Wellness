@@ -15,11 +15,6 @@ import {
   Star,
   Asterisk,
   Smile,
-  Info,
-  Newspaper,
-  Phone,
-  CalendarDays,
-  ChevronRight,
 } from 'lucide-react';
 
 interface NavItem {
@@ -30,16 +25,6 @@ interface NavItem {
 interface NavigationProps {
   links: NavItem[];
   className?: string;
-}
-
-// Pick a suitable icon for the homepage panel links
-function getItemIcon(name: string) {
-  const key = name.toLowerCase();
-  if (key.includes('about')) return <Info className="w-5 h-5" />;
-  if (key.includes('blog')) return <Newspaper className="w-5 h-5" />;
-  if (key.includes('contact')) return <Phone className="w-5 h-5" />;
-  if (key.includes('appointment') || key.includes('book')) return <CalendarDays className="w-5 h-5" />;
-  return <ChevronRight className="w-5 h-5" />;
 }
 
 export default function Navigation({ links, className = '' }: NavigationProps) {
@@ -133,19 +118,6 @@ export default function Navigation({ links, className = '' }: NavigationProps) {
               <CalendarCheck2 className="w-5 h-5" />
               <span>Services</span>
             </Link>
-
-            {/* Homepage panel links passed in (about, blog, contact, appointment) */}
-            {links.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={toggleMenu}
-                className={linkClasses(item.href)}
-              >
-                {getItemIcon(item.name)}
-                <span>{item.name}</span>
-              </Link>
-            ))}
           </div>
 
           {/* INFORMATION Category (kept as-is) */}
