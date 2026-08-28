@@ -1,137 +1,157 @@
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Leaf, Phone, Mail, MapPin } from 'lucide-react';
-import { FaInstagram, FaTiktok, FaSnapchat } from 'react-icons/fa';
+import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa6';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle newsletter submission logic here
+    setEmail('');
+  };
+
   return (
-    <footer className="w-full font-sans">
-      {/* Top Main Footer Block */}
-      <div className="w-full bg-[#EAEAEA] text-stone-800 py-12 px-6 lg:px-16 border-t border-stone-300">
-        <div className="container mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+    <footer className="w-full bg-[#2D5A43] text-stone-200 font-sans pt-16 pb-12 px-6 lg:px-16 border-t border-stone-700/30">
+      <div className="max-w-7xl mx-auto space-y-16">
+        
+        {/* Main Footer Links & Newsletter */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
           
-          {/* Column 1: Brand & Opening Hours */}
-          <div className="flex flex-col items-start">
-            <Link href="/" className="flex items-center gap-2 mb-6 group">
-              <Leaf className="w-7 h-7 text-[#125821]" />
-              <div className="flex flex-col">
-                <span className="text-xs font-black tracking-[0.18em] uppercase text-stone-900 leading-tight">
-                  HERBS & WELLNESS
-                </span>
-                <span className="text-[8px] tracking-[0.12em] uppercase text-stone-500 leading-tight">
-                  Holistic Integrative Clinic
-                </span>
-              </div>
+          {/* Brand & Newsletter Column (Centered Text/Items) */}
+          <div className="lg:col-span-5 space-y-6 pr-0 lg:pr-8 flex flex-col items-center text-center lg:items-center lg:text-center">
+            {/* Logo Text (Centered, No Image) */}
+            <Link href="/" className="flex flex-col items-center">
+              <span className="font-serif text-lg font-bold tracking-wider text-white uppercase leading-none">
+                HERBS &amp; WELLNESS
+              </span>
+              <span className="text-[9px] font-sans tracking-[0.25em] text-stone-300 uppercase mt-1">
+                F A R M A C Y
+              </span>
             </Link>
 
-            <h4 className="font-bold text-stone-900 text-sm md:text-base mb-2">
-              Opening Hours
-            </h4>
-            <p className="text-stone-600 text-xs md:text-sm">
-              Mon - Sat: 09:00am - 06:00pm
+            {/* Description */}
+            <p className="text-xs text-stone-300 font-light leading-relaxed max-w-sm">
+              Home of healing with plant and holistic lifestyle. Products, therapy sessions, and wellness support designed to help people heal with nature.
             </p>
-          </div>
 
-          {/* Column 2: Contact Details */}
-          <div className="flex flex-col gap-3.5 text-xs md:text-sm text-stone-700 font-medium pt-2 md:pt-0">
-            <a
-              href="tel:+2347064836444"
-              className="flex items-center gap-3 hover:text-[#125821] transition-colors"
-            >
-              <div className="bg-[#125821] text-white p-1.5 rounded">
-                <Phone className="w-4 h-4 fill-current stroke-none" />
-              </div>
-              <span>+234 7064836444</span>
-            </a>
+            {/* Newsletter Form */}
+            <form onSubmit={handleSubmit} className="space-y-3 max-w-sm w-full">
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="w-full bg-[#244A37] border border-stone-600/50 rounded-2xl px-4 py-3 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-stone-400 transition-colors text-center"
+              />
+              <button
+                type="submit"
+                className="w-full bg-[#D9C4AC] hover:bg-[#cbb297] text-stone-900 text-xs font-semibold py-3.5 rounded-full transition-all shadow-2xs"
+              >
+                Join the letter
+              </button>
+            </form>
 
-            <a
-              href="mailto:info@herbsandwellnesshub.com"
-              className="flex items-center gap-3 hover:text-[#125821] transition-colors"
-            >
-              <div className="bg-[#125821] text-white p-1.5 rounded">
-                <Mail className="w-4 h-4" />
-              </div>
-              <span>info@herbsandwellnesshub.com</span>
-            </a>
-
-            <div className="flex items-start gap-3">
-              <div className="bg-[#125821] text-white p-1.5 rounded mt-0.5">
-                <MapPin className="w-4 h-4" />
-              </div>
-              <div className="flex flex-col leading-snug">
-                <span>108B Adeniyi Jones, Ikeja 100271</span>
-                <span>Lagos</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Column 3: Social Links */}
-          <div className="flex flex-col items-start pt-2 md:pt-0">
-            <h4 className="font-bold text-stone-900 text-base md:text-lg mb-4">
-              Let’s connect!
-            </h4>
-
-            <div className="flex items-center gap-2.5">
-              {/* Instagram */}
+            {/* Social Icons */}
+            <div className="flex items-center justify-center gap-3 pt-2">
               <a
                 href="https://instagram.com"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noreferrer"
                 aria-label="Instagram"
-                className="bg-[#125821] hover:bg-[#0e461a] text-white p-2.5 rounded transition-colors flex items-center justify-center"
+                className="w-9 h-9 rounded-full border border-stone-600/60 flex items-center justify-center text-stone-300 hover:text-white hover:border-stone-400 transition-colors"
               >
                 <FaInstagram className="w-4 h-4" />
               </a>
-
-              {/* TikTok */}
               <a
-                href="https://tiktok.com"
+                href="https://twitter.com"
                 target="_blank"
-                rel="noopener noreferrer"
-                aria-label="TikTok"
-                className="bg-[#125821] hover:bg-[#0e461a] text-white p-2.5 rounded transition-colors flex items-center justify-center"
+                rel="noreferrer"
+                aria-label="Twitter"
+                className="w-9 h-9 rounded-full border border-stone-600/60 flex items-center justify-center text-stone-300 hover:text-white hover:border-stone-400 transition-colors"
               >
-                <FaTiktok className="w-4 h-4" />
+                <FaTwitter className="w-4 h-4" />
               </a>
-
-              {/* Snapchat */}
               <a
-                href="https://snapchat.com"
+                href="https://youtube.com"
                 target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Snapchat"
-                className="bg-[#125821] hover:bg-[#0e461a] text-white p-2.5 rounded transition-colors flex items-center justify-center"
+                rel="noreferrer"
+                aria-label="YouTube"
+                className="w-9 h-9 rounded-full border border-stone-600/60 flex items-center justify-center text-stone-300 hover:text-white hover:border-stone-400 transition-colors"
               >
-                <FaSnapchat className="w-4 h-4" />
+                <FaYoutube className="w-4 h-4" />
               </a>
             </div>
           </div>
 
+          {/* Links Grid Column */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-8 pt-4 lg:pt-0">
+            
+            {/* Column 1: Shop */}
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-300 block">
+                SHOP
+              </span>
+              <ul className="space-y-3 text-xs text-stone-200 font-light">
+                <li><Link href="/shop" className="hover:text-white transition-colors">All products</Link></li>
+                <li><Link href="/shop?filter=concern" className="hover:text-white transition-colors">Shop by concern</Link></li>
+                <li><Link href="/shop/gut-digestion" className="hover:text-white transition-colors">Gut &amp; digestion</Link></li>
+                <li><Link href="/shop/womens-health" className="hover:text-white transition-colors">Women&apos;s health</Link></li>
+                <li><Link href="/shop/mens-wellness" className="hover:text-white transition-colors">Men&apos;s wellness</Link></li>
+                <li><Link href="/shop/detox-cleanses" className="hover:text-white transition-colors">Detox &amp; cleanses</Link></li>
+                <li><Link href="/shop/immunity-relief" className="hover:text-white transition-colors">Immunity &amp; relief</Link></li>
+                <li><Link href="/shop/superfoods" className="hover:text-white transition-colors">Superfoods &amp; daily wellness</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 2: Therapy Session */}
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-300 block">
+                THERAPY SESSION
+              </span>
+              <ul className="space-y-3 text-xs text-stone-200 font-light">
+                <li><Link href="/therapy-sessions?session=gut-healing" className="hover:text-white transition-colors">Gut healing</Link></li>
+                <li><Link href="/therapy-sessions?session=hypertension" className="hover:text-white transition-colors">Hypertension</Link></li>
+                <li><Link href="/therapy-sessions?session=mens-fertility" className="hover:text-white transition-colors">Men&apos;s fertility</Link></li>
+                <li><Link href="/therapy-sessions?session=conception-prep" className="hover:text-white transition-colors">Conception prep</Link></li>
+                <li><Link href="/therapy-sessions?session=diabetes-support" className="hover:text-white transition-colors">Diabetes support</Link></li>
+                <li><Link href="/therapy-sessions?session=pcos-support" className="hover:text-white transition-colors">PCOS support</Link></li>
+                <li><Link href="/therapy-sessions?session=cancer-therapy" className="hover:text-white transition-colors">Cancer therapy</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 3: Support */}
+            <div className="space-y-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-300 block">
+                SUPPORT
+              </span>
+              <ul className="space-y-3 text-xs text-stone-200 font-light">
+                <li><Link href="/consultation" className="hover:text-white transition-colors">Consultation</Link></li>
+                <li><Link href="/track-order" className="hover:text-white transition-colors">Track an order</Link></li>
+                <li><Link href="/about" className="hover:text-white transition-colors">About Herbs &amp; Wellness Farmacy</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+
+          </div>
+
         </div>
-      </div>
 
-      {/* Bottom Sub-Footer Block */}
-      <div className="w-full bg-white text-stone-500 py-8 px-4 text-center border-t border-stone-100">
-        <div className="container mx-auto max-w-4xl flex flex-col items-center gap-3">
-          <p className="text-[10px] md:text-xs font-semibold tracking-wider text-stone-400 uppercase">
-            PROUDLY SERVING OUR COMMUNITY WITH HIGH-QUALITY HERBAL PRODUCTS & HOLISTIC WELLNESS GUIDANCE SINCE 2017.
-          </p>
-
-          <p className="text-[10px] md:text-xs text-stone-400 max-w-3xl leading-relaxed">
-            Disclaimer: None of our claims have been evaluated by NAFDAC or the food and drug administration. They are not intended to diagnose, treat, cure, or prevent any health conditions. Always seek professional advice before starting any regimen.
-          </p>
-
-          <Link
-            href="/privacy-policy"
-            className="text-stone-800 hover:text-[#125821] text-xs font-semibold underline mt-1 transition-colors"
-          >
-            Privacy Policy
-          </Link>
-
-          <p className="text-stone-800 text-xs font-semibold mt-1">
-            Copyright © Herbs & Wellness | Developed by{' '}
-            <span className="text-[#125821] font-bold">S-WEB</span>
-          </p>
+        {/* Bottom Copyright Bar */}
+        <div className="pt-8 border-t border-stone-700/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-400 font-light">
+          <div>
+            © 2026 Herbs &amp; Wellness Farmacy. Made in Nigeria.
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="/privacy" className="hover:text-stone-200 transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-stone-200 transition-colors">Terms</Link>
+            <Link href="/shipping" className="hover:text-stone-200 transition-colors">Shipping</Link>
+          </div>
         </div>
+
       </div>
     </footer>
   );

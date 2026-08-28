@@ -11,7 +11,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.9,
     reviewCount: 28,
     requiresConsultation: true,
-    images: ["/glucogerg.jpeg"],
+    images: ["/glucogerg2-Photoroom.png"],
     description: "A complementary herbal wellness combination...",
     isVariable: true,
     variants: [

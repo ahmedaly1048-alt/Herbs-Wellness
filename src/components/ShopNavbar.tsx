@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Menu,
   X,
@@ -16,21 +16,37 @@ import {
   Asterisk,
   Smile,
   Leaf,
-} from 'lucide-react';
+  ShoppingCart,
+} from "lucide-react";
+
+// 1. IMPORT THE STORE HERE:
+import { useCartStore } from "@/src/store/useCartStore";
 
 export default function ShopNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  // 2. EXTRACT openCart AND totalItems FROM ZUSTAND HERE:
+  const openCart = useCartStore((state) => state.openCart);
+  const totalItems = useCartStore((state) => state.getTotalItems());
+
+  // Prevent SSR hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const isActive = (path: string) => pathname === path;
 
   return (
     <>
-      {/* Desktop & Main Header (Original Styling Preserved) */}
-      <header id="hub-nav" className="w-full bg-white border-b border-stone-100 sticky top-0 z-40">
+      <header
+        id="hub-nav"
+        className="w-full bg-white border-b border-stone-100 sticky top-0 z-40"
+      >
         <div className="container mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-          {/* Logo & Mobile Menu Toggle */}
+          {/* Logo & Mobile Toggle */}
           <div className="flex items-center gap-3">
             <button
               onClick={toggleMenu}
@@ -53,36 +69,71 @@ export default function ShopNavbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation Links (Preserved) */}
+          {/* Nav Links */}
           <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-stone-700">
-            <Link href="/hub" className="hover:text-[#88B04B] transition-colors">
+            <Link
+              href="/hub"
+              className="hover:text-[#88B04B] transition-colors"
+            >
               Home
             </Link>
-            <Link href="/hub/consultation" className="hover:text-[#88B04B] transition-colors">
+            <Link
+              href="/hub/consultation"
+              className="hover:text-[#88B04B] transition-colors"
+            >
               Consultation
             </Link>
-            <Link href="/hub#herbalist" className="hover:text-[#88B04B] transition-colors">
+            <Link
+              href="/hub#herbalist"
+              className="hover:text-[#88B04B] transition-colors"
+            >
               Herbalist
             </Link>
-            <Link href="/hub#services" className="hover:text-[#88B04B] transition-colors">
+            <Link
+              href="/hub#services"
+              className="hover:text-[#88B04B] transition-colors"
+            >
               Services
             </Link>
-            <Link href="/hub#contact" className="hover:text-[#88B04B] transition-colors">
+            <Link
+              href="/hub#contact"
+              className="hover:text-[#88B04B] transition-colors"
+            >
               Contact
             </Link>
-            <Link href="/shop" className="hover:text-[#88B04B] transition-colors">
+            <Link
+              href="/shop/catalog"
+              className="hover:text-[#88B04B] transition-colors"
+            >
               Shop
-            </Link>
+            </Link>{" "}
           </nav>
 
-          {/* Appointment CTA (Preserved) */}
-          <div className="hidden md:block">
-            <Link
-              href="/hub/booking"
-              className="bg-[#9ACD32] hover:bg-[#88B04B] text-white text-xs font-bold px-5 py-2.5 rounded-full transition-colors duration-200"
+          {/* Action Buttons */}
+          <div className="flex items-center gap-4">
+            {/* 3. UPDATE THIS BUTTON TO CALL openCart: */}
+            <button
+              type="button"
+              onClick={openCart}
+              aria-label="View Cart"
+              className="relative p-2 text-stone-700 hover:text-stone-900 transition-colors cursor-pointer"
             >
-              Make an Appointment
-            </Link>
+              <ShoppingCart className="w-6 h-6 stroke-[1.8]" />
+              {mounted && totalItems > 0 && (
+                <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-[#125821] text-[10px] font-bold text-white shadow-xs">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+
+            <div className="hidden md:block">
+              <Link
+                href="/hub/booking"
+                className="bg-[#9ACD32] hover:bg-[#88B04B] text-white text-xs font-bold px-5 py-2.5 rounded-full transition-colors duration-200"
+              >
+                Make an Appointment
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -95,10 +146,10 @@ export default function ShopNavbar() {
         />
       )}
 
-      {/* Mobile Drawer Panel (Matching Reference Design) */}
+      {/* Mobile Drawer Panel */}
       <aside
         className={`fixed top-0 left-0 bottom-0 w-[280px] bg-white z-50 shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out md:hidden ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Mobile Header */}
@@ -123,9 +174,9 @@ export default function ShopNavbar() {
               href="/"
               onClick={toggleMenu}
               className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive('/')
-                  ? 'bg-blue-50/80 text-blue-600 font-semibold'
-                  : 'text-stone-800 hover:bg-stone-50'
+                isActive("/")
+                  ? "bg-blue-50/80 text-blue-600 font-semibold"
+                  : "text-stone-800 hover:bg-stone-50"
               }`}
             >
               <Building2 className="w-5 h-5" />
@@ -136,9 +187,9 @@ export default function ShopNavbar() {
               href="/shop"
               onClick={toggleMenu}
               className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive('/shop')
-                  ? 'bg-blue-50/80 text-blue-600 font-semibold'
-                  : 'text-stone-800 hover:bg-stone-50'
+                isActive("/shop")
+                  ? "bg-blue-50/80 text-blue-600 font-semibold"
+                  : "text-stone-800 hover:bg-stone-50"
               }`}
             >
               <Tag className="w-5 h-5" />
@@ -149,9 +200,9 @@ export default function ShopNavbar() {
               href="/hub/consultation"
               onClick={toggleMenu}
               className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive('/hub/consultation')
-                  ? 'bg-blue-50/80 text-blue-600 font-semibold'
-                  : 'text-stone-800 hover:bg-stone-50'
+                isActive("/hub/consultation")
+                  ? "bg-blue-50/80 text-blue-600 font-semibold"
+                  : "text-stone-800 hover:bg-stone-50"
               }`}
             >
               <CalendarCheck2 className="w-5 h-5" />

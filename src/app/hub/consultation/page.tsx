@@ -34,7 +34,7 @@ export default function ConsultationPage() {
           <div className="bg-white rounded-3xl border border-stone-200/70 p-6 md:p-10 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             <div className="lg:col-span-6 relative aspect-square w-full rounded-2xl overflow-hidden bg-stone-100 border border-stone-100">
               <Image
-                src="/consultation-hero.jpg"
+                src="/bg3.jpg"
                 alt="Clinical Wellness Consultation"
                 fill
                 priority
