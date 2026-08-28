@@ -17,9 +17,11 @@ import {
   Smile,
   Leaf,
   ShoppingCart,
+  User,
+  Activity,
+  PhoneCall,
 } from "lucide-react";
 
-// 1. IMPORT THE STORE HERE:
 import { useCartStore } from "@/src/store/useCartStore";
 
 export default function ShopNavbar() {
@@ -27,7 +29,6 @@ export default function ShopNavbar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
-  // 2. EXTRACT openCart AND totalItems FROM ZUSTAND HERE:
   const openCart = useCartStore((state) => state.openCart);
   const totalItems = useCartStore((state) => state.getTotalItems());
 
@@ -69,7 +70,7 @@ export default function ShopNavbar() {
             </Link>
           </div>
 
-          {/* Nav Links */}
+          {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-stone-700">
             <Link
               href="/hub"
@@ -106,12 +107,11 @@ export default function ShopNavbar() {
               className="hover:text-[#88B04B] transition-colors"
             >
               Shop
-            </Link>{" "}
+            </Link>
           </nav>
 
           {/* Action Buttons */}
           <div className="flex items-center gap-4">
-            {/* 3. UPDATE THIS BUTTON TO CALL openCart: */}
             <button
               type="button"
               onClick={openCart}
@@ -155,7 +155,7 @@ export default function ShopNavbar() {
         {/* Mobile Header */}
         <div className="p-6 border-b border-stone-100 flex items-center justify-between">
           <h2 className="text-xl font-bold text-stone-900 tracking-tight">
-            Naxawellness Clinic
+            Herbs & Wellness
           </h2>
           <button
             onClick={toggleMenu}
@@ -168,32 +168,24 @@ export default function ShopNavbar() {
 
         {/* Scrollable Mobile Menu Navigation */}
         <div className="flex-1 overflow-y-auto py-3 px-3 space-y-6 font-sans">
-          {/* Core Pages Section */}
+          {/* Main & Navigation Links */}
           <div className="space-y-1">
+            <h3 className="px-4 text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-2">
+              Navigation
+            </h3>
+
+
             <Link
               href="/"
               onClick={toggleMenu}
               className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive("/")
+                isActive("/hub")
                   ? "bg-blue-50/80 text-blue-600 font-semibold"
                   : "text-stone-800 hover:bg-stone-50"
               }`}
             >
               <Building2 className="w-5 h-5" />
-              <span>Welcome</span>
-            </Link>
-
-            <Link
-              href="/shop"
-              onClick={toggleMenu}
-              className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive("/shop")
-                  ? "bg-blue-50/80 text-blue-600 font-semibold"
-                  : "text-stone-800 hover:bg-stone-50"
-              }`}
-            >
-              <Tag className="w-5 h-5" />
-              <span>Products</span>
+              <span>Home</span>
             </Link>
 
             <Link
@@ -206,7 +198,47 @@ export default function ShopNavbar() {
               }`}
             >
               <CalendarCheck2 className="w-5 h-5" />
+              <span>Consultation</span>
+            </Link>
+
+            <Link
+              href="/hub#herbalist"
+              onClick={toggleMenu}
+              className="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium text-stone-800 hover:bg-stone-50 transition-colors"
+            >
+              <User className="w-5 h-5" />
+              <span>Herbalist</span>
+            </Link>
+
+            <Link
+              href="/hub#services"
+              onClick={toggleMenu}
+              className="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium text-stone-800 hover:bg-stone-50 transition-colors"
+            >
+              <Activity className="w-5 h-5" />
               <span>Services</span>
+            </Link>
+
+            <Link
+              href="/hub#contact"
+              onClick={toggleMenu}
+              className="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium text-stone-800 hover:bg-stone-50 transition-colors"
+            >
+              <PhoneCall className="w-5 h-5" />
+              <span>Contact</span>
+            </Link>
+
+            <Link
+              href="/shop/catalog"
+              onClick={toggleMenu}
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                isActive("/shop/catalog") || isActive("/shop")
+                  ? "bg-blue-50/80 text-blue-600 font-semibold"
+                  : "text-stone-800 hover:bg-stone-50"
+              }`}
+            >
+              <Tag className="w-5 h-5" />
+              <span>Shop</span>
             </Link>
           </div>
 
@@ -275,6 +307,17 @@ export default function ShopNavbar() {
             >
               <Smile className="w-5 h-5" />
               <span>Issue</span>
+            </Link>
+          </div>
+
+          {/* Mobile Appointment CTA Button */}
+          <div className="pt-2 pb-4">
+            <Link
+              href="/hub/booking"
+              onClick={toggleMenu}
+              className="block w-full text-center bg-[#9ACD32] hover:bg-[#88B04B] text-white text-xs font-bold px-5 py-3 rounded-full transition-colors duration-200"
+            >
+              Make an Appointment
             </Link>
           </div>
         </div>
