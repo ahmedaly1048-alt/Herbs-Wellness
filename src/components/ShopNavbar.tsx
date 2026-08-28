@@ -17,12 +17,18 @@ import {
   Smile,
   Leaf,
   ShoppingCart,
+  ChevronRight,
 } from "lucide-react";
 
 // 1. IMPORT THE STORE HERE:
 import { useCartStore } from "@/src/store/useCartStore";
 
-export default function ShopNavbar() {
+interface NavItem {
+  name: string;
+  href: string;
+}
+
+export default function ShopNavbar({ links = [] }: { links?: NavItem[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
@@ -33,6 +39,7 @@ export default function ShopNavbar() {
 
   // Prevent SSR hydration mismatch
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -155,7 +162,7 @@ export default function ShopNavbar() {
         {/* Mobile Header */}
         <div className="p-6 border-b border-stone-100 flex items-center justify-between">
           <h2 className="text-xl font-bold text-stone-900 tracking-tight">
-            Naxawellness Clinic
+            Herbs & Wellness
           </h2>
           <button
             onClick={toggleMenu}
@@ -209,6 +216,31 @@ export default function ShopNavbar() {
               <span>Services</span>
             </Link>
           </div>
+
+          {/* Quick Links (from homepage panels) */}
+          {links.length > 0 && (
+            <div className="space-y-1">
+              <h3 className="px-4 text-[11px] font-bold text-stone-400 uppercase tracking-wider mb-2">
+                Quick Links
+              </h3>
+
+              {links.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  onClick={toggleMenu}
+                  className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    isActive(link.href)
+                      ? "bg-blue-50/80 text-blue-600 font-semibold"
+                      : "text-stone-800 hover:bg-stone-50"
+                  }`}
+                >
+                  <ChevronRight className="w-5 h-5" />
+                  <span>{link.name}</span>
+                </Link>
+              ))}
+            </div>
+          )}
 
           {/* INFORMATION Category */}
           <div className="space-y-1">

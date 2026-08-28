@@ -4,7 +4,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRef } from 'react';
 import HeroSection from '../components/HeroSection';
-import Navigation from '../components/Navigation';
+import ShopNavbar from '../components/ShopNavbar';
 import WhatsAppButton from '../components/WhatsAppButton';
 
 const navLeft = [
@@ -29,12 +29,6 @@ export default function Home() {
         { opacity: 0 },
         { opacity: 1, duration: 1.2, ease: 'power3.out', stagger: 0.2 }
       )
-        .fromTo(
-          '#brand-logo',
-          { opacity: 0, y: -10 },
-          { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
-          '-=0.6'
-        )
         .fromTo(
           '#whatsapp-btn',
           { opacity: 0, scale: 0 },
@@ -64,16 +58,8 @@ export default function Home() {
           </>
         }
         headerContent={
-          <div className="flex flex-col gap-6 items-start">
-            <Navigation links={navLeft} />
-            <div id="brand-logo" className="flex flex-col items-start gap-0.5 mt-2 max-w-[220px]">
-              <span className="text-xs font-bold tracking-[0.2em] uppercase text-white leading-tight">
-                HERBS & WELLNESS
-              </span>
-              <span className="text-[8px] tracking-[0.15em] uppercase text-stone-300 leading-tight">
-                Holistic Integrative Clinic
-              </span>
-            </div>
+          <div className="w-full">
+            <ShopNavbar links={navLeft} />
           </div>
         }
       />
@@ -91,8 +77,8 @@ export default function Home() {
           </>
         }
         headerContent={
-          <div className="flex justify-end items-center">
-            <Navigation links={navRight} />
+          <div className="w-full">
+            <ShopNavbar links={navRight} />
           </div>
         }
       />
