@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -11,14 +11,65 @@ import {
   User,
   ShoppingBag,
   Leaf,
+  ChevronDown,
 } from "lucide-react";
 
 import { useCartStore } from "@/src/store/useCartStore";
 
+const healingTracks = [
+  {
+    title: "Healing from GERD / Gastritis / Acid Reflux / Ulcer",
+    href: "/shop/therapy/gerd-gastritis",
+  },
+  {
+    title: "Hypertension Therapy",
+    href: "/shop/therapy/hypertension",
+  },
+  {
+    title: "Men's Reproductive Health",
+    href: "/shop/therapy/mens-reproductive",
+  },
+  {
+    title: "Preparing for Conception",
+    href: "/shop/therapy/preparing-conception",
+  },
+  {
+    title: "Reversing Diabetes",
+    href: "/shop/therapy/reversing-diabetes",
+  },
+  {
+    title: "Reversing PCOS",
+    href: "/shop/therapy/reversing-pcos",
+  },
+  {
+    title: "Cancer Therapy Program",
+    href: "/shop/therapy/cancer-therapy",
+  },
+];
+
+const exploreLinks = [
+  {
+    title: "Herbalist",
+    href: "/hub#herbalist",
+  },
+  {
+    title: "Services",
+    href: "/hub#services",
+  },
+  {
+    title: "Contact",
+    href: "/hub#contact",
+  },
+];
+
 export default function ShopNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isTherapyOpen, setIsTherapyOpen] = useState(false);
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const exploreRef = useRef<HTMLDivElement>(null);
 
   const openCart = useCartStore((state) => state.openCart);
   const totalItems = useCartStore((state) => state.getTotalItems());
@@ -28,6 +79,48 @@ export default function ShopNavbar() {
     setMounted(true);
   }, []);
 
+  // Handle click outside dropdown to close
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsTherapyOpen(false);
+      }
+      if (
+        exploreRef.current &&
+        !exploreRef.current.contains(event.target as Node)
+      ) {
+        setIsExploreOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsTherapyOpen(false);
+        setIsExploreOpen(false);
+      }
+    };
+
+    if (isTherapyOpen || isExploreOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isTherapyOpen, isExploreOpen]);
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setIsTherapyOpen(false);
+    setIsExploreOpen(false);
+    setIsOpen(false);
+  }, [pathname]);
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const isRouteActive = (route: string) => {
@@ -36,10 +129,29 @@ export default function ShopNavbar() {
       return pathname === "/" || pathname === "/hub";
     }
     if (route === "shop") {
-      return pathname === "/shop" || pathname.startsWith("/shop/");
+      return pathname.startsWith("/shop/catalog");
+    }
+    if (route === "concerns") {
+      return pathname.includes("#concerns");
+    }
+    if (route === "therapy") {
+      return (
+        pathname.startsWith("/shop/therapy") ||
+        pathname === "/therapy-sessions" ||
+        pathname.startsWith("/therapy-sessions")
+      );
+    }
+    if (route === "explore") {
+      return isExploreOpen;
     }
     if (route === "consultation") {
       return pathname === "/consultation" || pathname === "/hub/consultation";
+    }
+    if (route === "journal") {
+      return pathname.includes("/journal") || pathname.includes("/blog");
+    }
+    if (route === "about") {
+      return pathname === "/about" || pathname.startsWith("/about");
     }
     return pathname === route;
   };
@@ -78,7 +190,7 @@ export default function ShopNavbar() {
           </div>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-8 text-[14px]">
+          <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-[13.5px] lg:text-[14px]">
             <Link
               href="/hub"
               className={`transition-colors ${isRouteActive("home")
@@ -88,6 +200,7 @@ export default function ShopNavbar() {
             >
               Home
             </Link>
+
             <Link
               href="/shop/catalog"
               className={`transition-colors ${isRouteActive("shop")
@@ -97,6 +210,125 @@ export default function ShopNavbar() {
             >
               Shop
             </Link>
+
+            <Link
+              href="/shop#concerns"
+              className={`transition-colors ${isRouteActive("concerns")
+                ? "font-medium text-stone-700"
+                : "text-stone-500 hover:text-stone-700 font-normal"
+                }`}
+            >
+              Concerns
+            </Link>
+
+            {/* Therapy session Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsTherapyOpen(!isTherapyOpen);
+                  setIsExploreOpen(false);
+                }}
+                className={`inline-flex items-center gap-1.5 transition-colors cursor-pointer focus:outline-none ${isRouteActive("therapy")
+                  ? "font-medium text-stone-700"
+                  : isTherapyOpen
+                    ? "text-stone-700 font-normal"
+                    : "text-stone-500 hover:text-stone-700 font-normal"
+                  }`}
+                aria-expanded={isTherapyOpen}
+                aria-haspopup="true"
+              >
+                <span>Therapy session</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isTherapyOpen ? "rotate-180 text-stone-800" : "text-stone-400"
+                    }`}
+                />
+              </button>
+
+              {/* Modal / Popover Dropdown Card */}
+              {isTherapyOpen && (
+                <div className="absolute top-full left-0 mt-2.5 w-[275px] sm:w-[295px] bg-white rounded-2xl sm:rounded-3xl border border-stone-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.10)] px-1.5 py-2.5 sm:px-1 sm:py-3 z-50 animate-fade-up">
+                  <div className="space-y-1">
+                    {/* Header Label */}
+                    <div className="px-2.5 sm:px-3 pt-0.5 pb-0.5">
+                      <span className="text-[10.5px] font-bold text-stone-400 uppercase tracking-[0.2em] block">
+                        HEALING TRACKS
+                      </span>
+                    </div>
+
+                    {/* Track List */}
+                    <ul className="space-y-0.5">
+                      {healingTracks.map((track, idx) => (
+                        <li key={idx}>
+                          <Link
+                            href={track.href}
+                            onClick={() => setIsTherapyOpen(false)}
+                            className="block w-full px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[13.5px] text-stone-800 hover:text-stone-950 hover:bg-[#EFECE6] border border-transparent hover:border-[#2D5A43]/45 transition-all duration-150 leading-snug font-normal"
+                          >
+                            {track.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Explore Dropdown */}
+            <div className="relative" ref={exploreRef}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsExploreOpen(!isExploreOpen);
+                  setIsTherapyOpen(false);
+                }}
+                className={`inline-flex items-center gap-1.5 transition-colors cursor-pointer focus:outline-none ${isRouteActive("explore")
+                  ? "font-medium text-stone-700"
+                  : isExploreOpen
+                    ? "text-stone-700 font-normal"
+                    : "text-stone-500 hover:text-stone-700 font-normal"
+                  }`}
+                aria-expanded={isExploreOpen}
+                aria-haspopup="true"
+              >
+                <span>Explore</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${isExploreOpen ? "rotate-180 text-stone-800" : "text-stone-400"
+                    }`}
+                />
+              </button>
+
+              {/* Modal / Popover Dropdown Card */}
+              {isExploreOpen && (
+                <div className="absolute top-full left-0 mt-2.5 w-[220px] bg-white rounded-2xl sm:rounded-3xl border border-stone-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.10)] px-1.5 py-2.5 sm:px-1 sm:py-3 z-50 animate-fade-up">
+                  <div className="space-y-1">
+                    {/* Header Label */}
+                    <div className="px-2.5 sm:px-3 pt-0.5 pb-0.5">
+                      <span className="text-[10.5px] font-bold text-stone-400 uppercase tracking-[0.2em] block">
+                        EXPLORE
+                      </span>
+                    </div>
+
+                    {/* Links List */}
+                    <ul className="space-y-0.5">
+                      {exploreLinks.map((link, idx) => (
+                        <li key={idx}>
+                          <Link
+                            href={link.href}
+                            onClick={() => setIsExploreOpen(false)}
+                            className="block w-full px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-[13.5px] text-stone-800 hover:text-stone-950 hover:bg-[#EFECE6] border border-transparent hover:border-[#2D5A43]/45 transition-all duration-150 leading-snug font-normal"
+                          >
+                            {link.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link
               href="/hub/consultation"
               className={`transition-colors ${isRouteActive("consultation")
@@ -106,23 +338,25 @@ export default function ShopNavbar() {
             >
               Consultation
             </Link>
+
             <Link
-              href="/hub#herbalist"
-              className="text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              href="/blog"
+              className={`transition-colors ${isRouteActive("journal")
+                ? "font-medium text-stone-700"
+                : "text-stone-500 hover:text-stone-700 font-normal"
+                }`}
             >
-              Herbalist
+              Journal
             </Link>
+
             <Link
-              href="/hub#services"
-              className="text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              href="/about"
+              className={`transition-colors ${isRouteActive("about")
+                ? "font-medium text-stone-700"
+                : "text-stone-500 hover:text-stone-700 font-normal"
+                }`}
             >
-              Services
-            </Link>
-            <Link
-              href="/hub#contact"
-              className="text-stone-500 hover:text-stone-700 font-normal transition-colors"
-            >
-              Contact
+              About
             </Link>
           </nav>
 
@@ -217,6 +451,28 @@ export default function ShopNavbar() {
               </Link>
 
               <Link
+                href="/shop/catalog"
+                onClick={toggleMenu}
+                className={`block py-1.5 text-[15px] transition-colors ${isRouteActive("shop")
+                  ? "font-medium text-stone-700"
+                  : "text-stone-500 hover:text-stone-700 font-normal"
+                  }`}
+              >
+                Shop
+              </Link>
+
+              <Link
+                href="/shop#concerns"
+                onClick={toggleMenu}
+                className={`block py-1.5 text-[15px] transition-colors ${isRouteActive("concerns")
+                  ? "font-medium text-stone-700"
+                  : "text-stone-500 hover:text-stone-700 font-normal"
+                  }`}
+              >
+                Concerns
+              </Link>
+
+              <Link
                 href="/hub/consultation"
                 onClick={toggleMenu}
                 className={`block py-1.5 text-[15px] transition-colors ${isRouteActive("consultation")
@@ -227,6 +483,37 @@ export default function ShopNavbar() {
                 Consultation
               </Link>
 
+              <Link
+                href="/blog"
+                onClick={toggleMenu}
+                className={`block py-1.5 text-[15px] transition-colors ${isRouteActive("journal")
+                  ? "font-medium text-stone-700"
+                  : "text-stone-500 hover:text-stone-700 font-normal"
+                  }`}
+              >
+                Journal
+              </Link>
+
+              <Link
+                href="/about"
+                onClick={toggleMenu}
+                className={`block py-1.5 text-[15px] transition-colors ${isRouteActive("about")
+                  ? "font-medium text-stone-700"
+                  : "text-stone-500 hover:text-stone-700 font-normal"
+                  }`}
+              >
+                About
+              </Link>
+            </div>
+          </div>
+
+          {/* Explore Category */}
+          <div className="space-y-3">
+            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-[0.18em] block">
+              Explore
+            </span>
+
+            <div className="space-y-1.5">
               <Link
                 href="/hub#herbalist"
                 onClick={toggleMenu}
@@ -250,16 +537,70 @@ export default function ShopNavbar() {
               >
                 Contact
               </Link>
+            </div>
+          </div>
+
+          {/* Therapy Session Category */}
+          <div className="space-y-3">
+            <span className="text-[11px] font-bold text-stone-400 uppercase tracking-[0.18em] block">
+              THERAPY SESSION
+            </span>
+
+            <div className="space-y-1.5">
+              <Link
+                href="/shop/therapy/gerd-gastritis"
+                onClick={toggleMenu}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              >
+                Gut healing
+              </Link>
 
               <Link
-                href="/shop/catalog"
+                href="/shop/therapy/hypertension"
                 onClick={toggleMenu}
-                className={`block py-1.5 text-[15px] transition-colors ${isRouteActive("shop")
-                  ? "font-medium text-stone-700"
-                  : "text-stone-500 hover:text-stone-700 font-normal"
-                  }`}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
               >
-                Shop
+                Hypertension
+              </Link>
+
+              <Link
+                href="/shop/therapy/mens-reproductive"
+                onClick={toggleMenu}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              >
+                Men's fertility
+              </Link>
+
+              <Link
+                href="/shop/therapy/preparing-conception"
+                onClick={toggleMenu}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              >
+                Conception prep
+              </Link>
+
+              <Link
+                href="/shop/therapy/reversing-diabetes"
+                onClick={toggleMenu}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              >
+                Diabetes support
+              </Link>
+
+              <Link
+                href="/shop/therapy/reversing-pcos"
+                onClick={toggleMenu}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              >
+                PCOS support
+              </Link>
+
+              <Link
+                href="/shop/therapy/cancer-therapy"
+                onClick={toggleMenu}
+                className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
+              >
+                Cancer therapy
               </Link>
             </div>
           </div>
@@ -356,15 +697,15 @@ export default function ShopNavbar() {
             onClick={toggleMenu}
             className="block w-full text-center bg-[#2D5A43] hover:bg-[#234734] text-white text-sm font-semibold py-3.5 px-4 rounded-full transition-colors shadow-xs"
           >
-            Make an Appointment
+            Sign in
           </Link>
 
           <Link
-            href="/shop/catalog"
+            href="/hub/booking"
             onClick={toggleMenu}
             className="block w-full text-center bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-sm font-semibold py-3.5 px-4 rounded-full transition-colors"
           >
-            Explore Catalog
+            Create Account
           </Link>
         </div>
       </aside>
