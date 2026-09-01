@@ -23,6 +23,7 @@ import ValueProps from '@/src/components/ValueProps';
 import FaqSection from '@/src/components/FaqSection';
 import HealingJourney from '@/src/components/HealingJourney';
 import HolisticLivingBanner from '@/src/components/HolisticLivingBanner';
+import SupportPaths from '@/src/components/SupportPaths';
 import ProductGrid from '@/src/components/ProductGrid';
 
 export default function ShopPage() {
@@ -60,9 +61,10 @@ export default function ShopPage() {
       className="min-h-screen w-full bg-white text-stone-800 font-sans flex flex-col justify-between"
     >
       <div>
-        <ShopNavbar />        
+        <ShopNavbar />
         <ShopHero />
         <ValueProps />
+        <SupportPaths />
         <ConcernsGrid />
         <HolisticLivingBanner />
 
