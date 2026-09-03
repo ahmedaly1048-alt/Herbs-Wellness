@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
   X,
@@ -12,9 +12,12 @@ import {
   ShoppingBag,
   Leaf,
   ChevronDown,
+  LogOut,
+  ShieldCheck,
 } from "lucide-react";
 
 import { useCartStore } from "@/src/store/useCartStore";
+import { useAuthStore } from "@/src/store/useAuthStore";
 
 const healingTracks = [
   {
@@ -66,13 +69,24 @@ export default function ShopNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isTherapyOpen, setIsTherapyOpen] = useState(false);
   const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const exploreRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   const openCart = useCartStore((state) => state.openCart);
   const totalItems = useCartStore((state) => state.getTotalItems());
+
+  const { user, isAuthenticated, logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+    setIsUserMenuOpen(false);
+    router.push('/');
+  };
 
   // Prevent SSR hydration mismatch
   useEffect(() => {
@@ -94,6 +108,12 @@ export default function ShopNavbar() {
       ) {
         setIsExploreOpen(false);
       }
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsUserMenuOpen(false);
+      }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -103,7 +123,7 @@ export default function ShopNavbar() {
       }
     };
 
-    if (isTherapyOpen || isExploreOpen) {
+    if (isTherapyOpen || isExploreOpen || isUserMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleKeyDown);
     }
@@ -112,7 +132,7 @@ export default function ShopNavbar() {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isTherapyOpen, isExploreOpen]);
+  }, [isTherapyOpen, isExploreOpen, isUserMenuOpen]);
 
   // Close dropdown on route change
   useEffect(() => {
@@ -378,13 +398,72 @@ export default function ShopNavbar() {
               <Heart className="w-5 h-5 stroke-[1.8]" />
             </Link>
 
-            <Link
-              href="/hub/booking"
-              aria-label="Account"
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-[#EFEBE1] active:bg-[#E6E0D4] transition-colors duration-150"
-            >
-              <User className="w-[18px] h-[18px] sm:w-5 sm:h-5 stroke-[1.8]" />
-            </Link>
+            {/* ── User / Auth Icon ── */}
+            {mounted && (
+              isAuthenticated() ? (
+                // Logged in — show avatar with dropdown
+                <div className="relative" ref={userMenuRef}>
+                  <button
+                    id="navbar-user-menu-btn"
+                    type="button"
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    aria-label="Account menu"
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-[#2D5A43] text-white text-xs font-bold hover:bg-[#234734] transition-colors shrink-0"
+                  >
+                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                  </button>
+
+                  {isUserMenuOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-52 bg-white rounded-2xl border border-stone-200/80 shadow-[0_16px_40px_rgba(0,0,0,0.10)] py-2 z-50 animate-fade-up">
+                      <div className="px-4 py-2 border-b border-stone-100">
+                        <p className="text-xs font-semibold text-stone-900 truncate">{user?.name}</p>
+                        <p className="text-[11px] text-stone-400 truncate">{user?.email}</p>
+                      </div>
+                      <div className="py-1">
+                        {user?.role === 'admin' && (
+                          <Link
+                            href="/admin/dashboard"
+                            onClick={() => setIsUserMenuOpen(false)}
+                            className="flex items-center gap-2.5 px-4 py-2 text-sm font-semibold text-[#2D5A43] hover:bg-[#EBF2EE] transition-colors"
+                          >
+                            <ShieldCheck className="w-4 h-4 text-[#2D5A43]" />
+                            Admin Dashboard
+                          </Link>
+                        )}
+                        <Link
+                          href="/account"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 transition-colors"
+                        >
+                          <User className="w-4 h-4 text-stone-400" />
+                          My Account
+                        </Link>
+                        <button
+                          id="navbar-logout-btn"
+                          type="button"
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          Sign out
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                // Not logged in — show Login link
+                <Link
+                  id="navbar-login-btn"
+                  href="/login"
+                  aria-label="Login"
+                  className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#2D5A43] border border-[#2D5A43]/30 hover:bg-[#2D5A43] hover:text-white px-4 py-2 rounded-full transition-all duration-150"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  Login
+                </Link>
+              )
+            )}
 
             <button
               type="button"
@@ -692,21 +771,59 @@ export default function ShopNavbar() {
 
         {/* Bottom Actions */}
         <div className="p-6 border-t border-stone-200/60 bg-white space-y-3 shrink-0">
-          <Link
-            href="/hub/booking"
-            onClick={toggleMenu}
-            className="block w-full text-center bg-[#2D5A43] hover:bg-[#234734] text-white text-sm font-semibold py-3.5 px-4 rounded-full transition-colors shadow-xs"
-          >
-            Sign in
-          </Link>
-
-          <Link
-            href="/hub/booking"
-            onClick={toggleMenu}
-            className="block w-full text-center bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-sm font-semibold py-3.5 px-4 rounded-full transition-colors"
-          >
-            Create Account
-          </Link>
+          {mounted && isAuthenticated() ? (
+            <>
+              <div className="flex items-center gap-3 px-1 mb-2">
+                <div className="w-9 h-9 rounded-full bg-[#2D5A43] flex items-center justify-center text-white text-sm font-bold shrink-0">
+                  {user?.name?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-stone-900 truncate">{user?.name}</p>
+                  <p className="text-[11px] text-stone-400 truncate">{user?.email}</p>
+                </div>
+              </div>
+              {user?.role === 'admin' && (
+                <Link
+                  href="/admin/dashboard"
+                  onClick={toggleMenu}
+                  className="block w-full text-center bg-[#2D5A43] hover:bg-[#234734] text-white text-sm font-semibold py-3.5 px-4 rounded-full transition-colors shadow-xs"
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              <Link
+                href="/account"
+                onClick={toggleMenu}
+                className="block w-full text-center bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-sm font-semibold py-3.5 px-4 rounded-full transition-colors"
+              >
+                My Account
+              </Link>
+              <button
+                type="button"
+                onClick={() => { toggleMenu(); handleLogout(); }}
+                className="w-full text-center bg-red-50 border border-red-100 hover:bg-red-100 text-red-600 text-sm font-semibold py-3.5 px-4 rounded-full transition-colors"
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                onClick={toggleMenu}
+                className="block w-full text-center bg-[#2D5A43] hover:bg-[#234734] text-white text-sm font-semibold py-3.5 px-4 rounded-full transition-colors shadow-xs"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                onClick={toggleMenu}
+                className="block w-full text-center bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 text-sm font-semibold py-3.5 px-4 rounded-full transition-colors"
+              >
+                Create Account
+              </Link>
+            </>
+          )}
         </div>
       </aside>
     </>

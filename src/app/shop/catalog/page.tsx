@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Heart, Search, ChevronDown, Star } from 'lucide-react';
 
 import { Product } from '@/src/types/product';
-import { getAllProducts, getProductPriceDisplay } from '@/src/lib/product';
+import { fetchProducts, getProductPriceDisplay } from '@/src/lib/product';
 import { useCartStore } from '@/src/store/useCartStore';
+import { useAuthStore } from '@/src/store/useAuthStore';
 import ShopNavbar from '@/src/components/ShopNavbar';
 import CartDrawer from '@/src/components/CartDrawer';
 import Footer from '@/src/components/Footer';
@@ -43,8 +45,35 @@ const CONCERNS = [
 const ITEMS_PER_PAGE = 12;
 
 export default function ShopCatalog() {
-  const allProducts: Product[] = getAllProducts();
+  const router = useRouter();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const addItem = useCartStore((state) => state.addItem);
+  const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    async function loadCatalog() {
+      const prods = await fetchProducts();
+      setAllProducts(prods);
+    }
+    loadCatalog();
+  }, []);
+
+  const handleAddToCart = (product: Product, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent('/shop/catalog')}`);
+      return;
+    }
+    addItem(product);
+  };
+
+  const handleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent('/shop/catalog')}`);
+      return;
+    }
+  };
 
   // Filter & Control States
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -334,6 +363,7 @@ export default function ShopCatalog() {
                       <button
                         type="button"
                         aria-label="Add to wishlist"
+                        onClick={handleWishlist}
                         className="absolute top-6 right-6 z-10 p-1.5 rounded-full bg-white/80 hover:bg-white text-stone-400 hover:text-rose-500 shadow-2xs transition-colors"
                       >
                         <Heart className="w-3.5 h-3.5" />
@@ -352,10 +382,7 @@ export default function ShopCatalog() {
                           <div className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                             <button
                               type="button"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                addItem(product);
-                              }}
+                              onClick={(e) => handleAddToCart(product, e)}
                               className="w-full bg-[#2D5A43] hover:bg-[#234734] text-white text-[11px] font-semibold py-2 rounded-lg transition-colors shadow-sm"
                             >
                               Add to cart

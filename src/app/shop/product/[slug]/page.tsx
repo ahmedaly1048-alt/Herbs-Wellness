@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import ProductClientView from "./ProductClientView";
-import { PRODUCTS } from "@/src/data/product";
+import { fetchProductBySlug, fetchProducts } from "@/src/lib/product";
 
 export default async function ProductPage({
   params,
@@ -9,12 +9,16 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
 
-  // Find product matching URL slug
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  // Fetch product from MongoDB Atlas via API
+  const product = await fetchProductBySlug(slug);
 
   if (!product) {
     notFound();
   }
 
-  return <ProductClientView product={product} />;
+  // Fetch related products from DB
+  const allProducts = await fetchProducts();
+  const relatedProducts = allProducts.filter((p) => p.slug !== slug).slice(0, 3);
+
+  return <ProductClientView product={product} initialRelatedProducts={relatedProducts} />;
 }

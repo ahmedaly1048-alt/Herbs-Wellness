@@ -3,9 +3,11 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { Heart, Star } from 'lucide-react';
 import { Product } from '@/src/types/product';
 import { useCartStore } from '@/src/store/useCartStore';
+import { useAuthStore } from '@/src/store/useAuthStore';
 
 interface ProductGridProps {
   title?: string;
@@ -20,8 +22,25 @@ export default function ProductGrid({
   products,
   actionLink = { text: "Shop all best sellers →", href: "/shop" },
 }: ProductGridProps) {
-  // Extract state management action right here:
+  const router = useRouter();
+  const pathname = usePathname();
   const addItem = useCartStore((state) => state.addItem);
+  const { isAuthenticated } = useAuthStore();
+
+  const handleAddToCart = (product: Product) => {
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent(pathname || '/shop')}`);
+      return;
+    }
+    addItem(product);
+  };
+
+  const handleWishlist = (product: Product) => {
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent(pathname || '/shop')}`);
+      return;
+    }
+  };
 
   return (
     <section className="w-full bg-[#F6F4EE] py-12 px-6 lg:px-16 font-sans">
@@ -71,6 +90,7 @@ export default function ProductGrid({
                   <button
                     type="button"
                     aria-label="Add to wishlist"
+                    onClick={() => handleWishlist(product)}
                     className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 hover:bg-white flex items-center justify-center text-stone-600 shadow-2xs z-10 transition-colors"
                   >
                     <Heart className="w-4 h-4 stroke-[1.5]" />
@@ -91,7 +111,7 @@ export default function ProductGrid({
                     <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
                       <button
                         type="button"
-                        onClick={() => addItem(product)}
+                        onClick={() => handleAddToCart(product)}
                         className="w-full bg-[#2D5A43] hover:bg-[#234734] text-white text-xs font-semibold py-2.5 rounded-full transition-colors cursor-pointer"
                       >
                         Add to cart
