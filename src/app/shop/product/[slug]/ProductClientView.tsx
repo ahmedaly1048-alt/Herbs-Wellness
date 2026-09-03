@@ -3,27 +3,66 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Star, Heart, Share2, Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Star, Heart, Share2, Minus, Plus } from 'lucide-react';
 
 import ShopNavbar from '@/src/components/ShopNavbar';
 import Footer from '@/src/components/Footer';
 import WhatsAppButton from '@/src/components/WhatsAppButton';
 import { Product } from '@/src/types/product';
-import { PRODUCTS } from '@/src/data/product';
 import ProductGrid from '@/src/components/ProductGrid';
+import { useAuthStore } from '@/src/store/useAuthStore';
+import { useCartStore } from '@/src/store/useCartStore';
 
-export default function ProductClientView({ product }: { product: Product }) {
+export default function ProductClientView({
+  product,
+  initialRelatedProducts = [],
+}: {
+  product: Product;
+  initialRelatedProducts?: Product[];
+}) {
+  const router = useRouter();
   const [selectedVariant, setSelectedVariant] = useState(
     product.isVariable && product.variants ? product.variants[0] : null
   );
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'benefits' | 'ingredients' | 'howToUse' | 'additional'>('benefits');
+  const [wishlisted, setWishlisted] = useState(false);
+
+  const { isAuthenticated } = useAuthStore();
+  const { addItem } = useCartStore();
 
   const unitPrice = selectedVariant ? selectedVariant.price : (product.price || 0);
   const subtotal = unitPrice * quantity;
 
-  // Filter related items for "Pairs well with this"
-  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const currentPath = `/shop/product/${product.slug}`;
+
+  // ─── Auth-gated actions with direct redirect to signup ─────────────────────
+  const handleWishlist = () => {
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+    setWishlisted((prev) => !prev);
+  };
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+    addItem(product, quantity);
+  };
+
+  const handleBuyNow = () => {
+    if (!isAuthenticated()) {
+      router.push(`/register?redirect=${encodeURIComponent(currentPath)}`);
+      return;
+    }
+    addItem(product, quantity);
+  };
+
+  const relatedProducts = initialRelatedProducts;
 
   return (
     <div className="min-h-screen bg-[#F6F4EE] text-stone-800 font-sans flex flex-col justify-between">
@@ -40,7 +79,7 @@ export default function ProductClientView({ product }: { product: Product }) {
 
           {/* Top Main Section: Image + Purchase Sidebar */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
+
             {/* Left: Big Product Image Showcase */}
             <div className="lg:col-span-7">
               <div className="relative w-full aspect-square rounded-3xl bg-[#ECE8E1] p-12 flex items-center justify-center border border-stone-200/50">
@@ -79,9 +118,20 @@ export default function ProductClientView({ product }: { product: Product }) {
                   <span className="font-semibold text-stone-800">{product.rating || 5.0}</span>
                   <span className="text-stone-400">· {product.reviewCount || 1} reviews</span>
                 </div>
-                <button type="button" className="flex items-center gap-1 hover:text-stone-900">
-                  <Heart className="w-3.5 h-3.5" /> Wishlist
+
+                {/* ── Auth-gated: Wishlist ── */}
+                <button
+                  type="button"
+                  id="product-wishlist-btn"
+                  onClick={handleWishlist}
+                  className={`flex items-center gap-1 transition-colors ${
+                    wishlisted ? 'text-rose-500' : 'hover:text-stone-900'
+                  }`}
+                >
+                  <Heart className={`w-3.5 h-3.5 ${wishlisted ? 'fill-rose-500 stroke-rose-500' : ''}`} />
+                  {wishlisted ? 'Saved' : 'Wishlist'}
                 </button>
+
                 <button type="button" className="flex items-center gap-1 hover:text-stone-900">
                   <Share2 className="w-3.5 h-3.5" /> Share
                 </button>
@@ -89,7 +139,7 @@ export default function ProductClientView({ product }: { product: Product }) {
 
               {/* Savings Banner Pill */}
               <div className="bg-[#EBF2EE] text-[#2D5A43] text-xs font-medium px-4 py-2 rounded-full inline-block">
-                Buy 3+ & save 2% (₦{(unitPrice * 0.98).toLocaleString()} each)
+                Buy 3+ &amp; save 2% (₦{(unitPrice * 0.98).toLocaleString()} each)
               </div>
 
               <p className="text-xs text-stone-600 leading-relaxed font-light">
@@ -122,21 +172,45 @@ export default function ProductClientView({ product }: { product: Product }) {
                   </span>
                 </div>
 
-                {/* Primary Buttons */}
+                {/* ── Primary Buttons (Redirects to signup if not logged in) ── */}
                 <div className="grid grid-cols-2 gap-3">
                   <button
+                    id="product-add-to-cart-btn"
                     type="button"
+                    onClick={handleAddToCart}
                     className="bg-[#2D5A43] hover:bg-[#234734] text-white text-xs font-semibold py-3.5 rounded-full transition-all"
                   >
                     Add to cart
                   </button>
                   <button
+                    id="product-buy-now-btn"
                     type="button"
+                    onClick={handleBuyNow}
                     className="bg-[#D9C4AC] hover:bg-[#cbb297] text-stone-900 text-xs font-semibold py-3.5 rounded-full transition-all"
                   >
                     Buy now
                   </button>
                 </div>
+
+                {/* Subtle login nudge when not authenticated */}
+                {!isAuthenticated() && (
+                  <p className="text-[11px] text-stone-400 text-center">
+                    <Link
+                      href={`/login?redirect=${encodeURIComponent(currentPath)}`}
+                      className="text-[#2D5A43] hover:underline font-medium"
+                    >
+                      Sign in
+                    </Link>{' '}
+                    or{' '}
+                    <Link
+                      href={`/register?redirect=${encodeURIComponent(currentPath)}`}
+                      className="text-[#2D5A43] hover:underline font-medium"
+                    >
+                      create an account
+                    </Link>{' '}
+                    to shop
+                  </p>
+                )}
               </div>
 
               {/* Trust Badges Bar */}

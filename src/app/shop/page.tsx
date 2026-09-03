@@ -2,11 +2,11 @@
 
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-// import { ShoppingCart } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Data and Utilities
-import { PRODUCTS } from '@/src/data/product';
+import { fetchProducts } from '@/src/lib/product';
+import { Product } from '@/src/types/product';
 
 // Global Layout Components
 import WhatsAppButton from '@/src/components/WhatsAppButton';
@@ -23,11 +23,20 @@ import ValueProps from '@/src/components/ValueProps';
 import FaqSection from '@/src/components/FaqSection';
 import HealingJourney from '@/src/components/HealingJourney';
 import HolisticLivingBanner from '@/src/components/HolisticLivingBanner';
+import SupportPaths from '@/src/components/SupportPaths';
 import ProductGrid from '@/src/components/ProductGrid';
 
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    async function loadProducts() {
+      const liveProducts = await fetchProducts();
+      setProducts(liveProducts);
+    }
+    loadProducts();
+  }, []);
 
   useGSAP(
     () => {
@@ -60,15 +69,15 @@ export default function ShopPage() {
       className="min-h-screen w-full bg-white text-stone-800 font-sans flex flex-col justify-between"
     >
       <div>
-        <ShopNavbar />        
+        <ShopNavbar />
         <ShopHero />
         <ValueProps />
+        <SupportPaths />
         <ConcernsGrid />
         <HolisticLivingBanner />
 
-        {/* Pass PRODUCTS array to fix TypeScript error */}
-        <ProductGrid products={PRODUCTS} />
-
+        {/* Dynamic products fetched from MongoDB Atlas API */}
+        <ProductGrid products={products} />
 
         <CartDrawer />
 
@@ -80,22 +89,6 @@ export default function ShopPage() {
 
       <Footer />
       <WhatsAppButton />
-
-      {/* <div className="fixed bottom-6 right-6 z-50">
-        <button
-          type="button"
-          aria-label="View Cart"
-          onClick={() => setIsCartOpen(true)}
-          className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-stone-800 shadow-xl border border-stone-200 transition-transform hover:scale-105 cursor-pointer"
-        >
-          <ShoppingCart className="w-6 h-6 stroke-[2]" />
-          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#125821] text-[10px] font-bold text-white">
-            0
-          </span>
-        </button>
-      </div> */}
-
-      {/* <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} /> */}
     </div>
   );
 }

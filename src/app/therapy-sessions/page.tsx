@@ -14,49 +14,49 @@ const therapySessions = [
     description:
       'A guided therapy path built around gut repair, food changes, lifestyle adjustments, and herbal support for long-term digestive healing.',
     priceText: 'AVAILABLE ON ENQUIRY',
-    href: '/consultation?session=gerd-gastritis',
+    href: '/shop/therapy/gerd-gastritis',
   },
   {
     title: 'Hypertension Therapy',
     description:
       'A one-on-one holistic support plan focused on blood-pressure balance through food, herbal support, follow-up, and sustainable lifestyle change.',
     priceText: '100,000 NAIRA  3 MONTHS',
-    href: '/consultation?session=hypertension',
+    href: '/shop/therapy/hypertension',
   },
   {
     title: "Men's Reproductive Health",
     description:
       'A fertility-focused support session for men, covering testing, food, lifestyle, cleanse support, and natural reproductive wellness guidance.',
     priceText: '70,000 NAIRA',
-    href: '/consultation?session=mens-reproductive',
+    href: '/shop/therapy/mens-reproductive',
   },
   {
     title: 'Preparing for Conception',
     description:
       'A four-month natural fertility support track designed to guide clients through food, assessment, follow-up, and holistic preparation for conception.',
     priceText: '100,000 NAIRA  4 MONTHS',
-    href: '/consultation?session=preparing-conception',
+    href: '/shop/therapy/preparing-conception',
   },
   {
     title: 'Reversing Diabetes',
     description:
       'A four-month holistic diabetes support program centered on diet, lifestyle, and plant-based supplement guidance.',
     priceText: '70,000 NAIRA  4 MONTHS',
-    href: '/consultation?session=reversing-diabetes',
+    href: '/shop/therapy/reversing-diabetes',
   },
   {
     title: 'Reversing PCOS',
     description:
       'A reproductive wellness therapy path focused on hormone balance, cycle support, womb health, and holistic lifestyle change.',
     priceText: 'AVAILABLE ON ENQUIRY',
-    href: '/consultation?session=reversing-pcos',
+    href: '/shop/therapy/reversing-pcos',
   },
   {
     title: 'Cancer Therapy Program',
     description:
       'A guided holistic support program that works alongside medical care, using food, lifestyle, and plant support to strengthen the healing journey.',
     priceText: '120,000 NAIRA',
-    href: '/consultation?session=cancer-therapy',
+    href: '/shop/therapy/cancer-therapy',
   },
 ];
 

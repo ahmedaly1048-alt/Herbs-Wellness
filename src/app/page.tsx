@@ -3,6 +3,7 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRef } from 'react';
+import Link from 'next/link';
 import HeroSection from '../components/HeroSection';
 import Navigation from '../components/Navigation';
 import WhatsAppButton from '../components/WhatsAppButton';
@@ -34,6 +35,12 @@ export default function Home() {
           { opacity: 0, y: -10 },
           { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
           '-=0.6'
+        )
+        .fromTo(
+          '#home-login-btn',
+          { opacity: 0, y: -8 },
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+          '-=0.4'
         )
         .fromTo(
           '#whatsapp-btn',
@@ -78,7 +85,7 @@ export default function Home() {
         }
       />
 
-      {/* Right Panel - Hub (Redirects to /hub) */}
+      {/* Right Panel - Hub */}
       <HeroSection
         id="right-panel"
         href="/hub"
@@ -91,8 +98,16 @@ export default function Home() {
           </>
         }
         headerContent={
-          <div className="flex justify-end items-center">
+          <div className="flex justify-end items-center gap-4">
             <Navigation links={navRight} />
+            {/* Login button */}
+            <Link
+              id="home-login-btn"
+              href="/login"
+              className="text-xs font-semibold tracking-wider uppercase px-4 py-2 rounded-full border border-white/50 text-white hover:bg-white hover:text-stone-900 transition-all duration-200 backdrop-blur-sm bg-white/10"
+            >
+              Login
+            </Link>
           </div>
         }
       />

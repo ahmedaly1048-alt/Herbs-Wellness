@@ -69,7 +69,7 @@ export const PRODUCTS: Product[] = [
     rating: 4.8,
     reviewCount: 12,
     requiresConsultation: false,
-    images: ["/products/chamomile.jpg"],
+    images: ["/sellers_bottle.png"],
     description: "Soothing organic herbal blend crafted for restful sleep.",
     isVariable: false,
     price: 4500,
