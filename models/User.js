@@ -8,6 +8,14 @@ const userSchema = new mongoose.Schema(
       required: [true, "Name is required"],
       trim: true,
     },
+    username: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      unique: true,
+      sparse: true,
+      minlength: [3, "Username must be at least 3 characters"],
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -80,6 +88,7 @@ userSchema.methods.toSafeObject = function () {
   return {
     _id: this._id,
     name: this.name,
+    username: this.username,
     email: this.email,
     role: this.role,
     isActive: this.isActive,

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: herbs-wellness-api
+    runtime: node
+    rootDir: .
+    buildCommand: npm install
+    startCommand: npm run start:backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CLIENT_URL
+        sync: false

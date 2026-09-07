@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { Lock } from 'lucide-react';
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa6';
 
 export default function Footer() {
@@ -149,6 +150,10 @@ export default function Footer() {
             <Link href="/privacy" className="hover:text-stone-200 transition-colors">Privacy</Link>
             <Link href="/terms" className="hover:text-stone-200 transition-colors">Terms</Link>
             <Link href="/shipping" className="hover:text-stone-200 transition-colors">Shipping</Link>
+            <Link href="/admin" className="inline-flex items-center gap-1.5 text-stone-300 hover:text-[#D9C4AC] transition-colors font-semibold">
+              <Lock className="w-3 h-3" />
+              Admin
+            </Link>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import ProductClientView from "./ProductClientView";
-import { PRODUCTS } from "@/src/data/product";
+import { fetchProductBySlug } from "@/src/lib/api";
 
 export default async function ProductPage({
   params,
@@ -9,8 +9,9 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
 
-  // Find product matching URL slug
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  // Fetch product from the Express backend (falls back to the static catalog
+  // if the API is unreachable).
+  const product = await fetchProductBySlug(slug);
 
   if (!product) {
     notFound();

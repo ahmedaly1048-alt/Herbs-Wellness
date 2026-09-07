@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, Search, ChevronDown, Star } from 'lucide-react';
 
 import { Product } from '@/src/types/product';
-import { getAllProducts, getProductPriceDisplay } from '@/src/lib/product';
+import { getProductPriceDisplay } from '@/src/lib/product';
+import { fetchProducts } from '@/src/lib/api';
 import { useCartStore } from '@/src/store/useCartStore';
 import ShopNavbar from '@/src/components/ShopNavbar';
 import CartDrawer from '@/src/components/CartDrawer';
@@ -43,8 +44,24 @@ const CONCERNS = [
 const ITEMS_PER_PAGE = 12;
 
 export default function ShopCatalog() {
-  const allProducts: Product[] = getAllProducts();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const addItem = useCartStore((state) => state.addItem);
+
+  // Load the full catalog from the Express backend. fetchProducts() falls back
+  // to the static catalog if the API is unreachable.
+  useEffect(() => {
+    let cancelled = false;
+    fetchProducts().then((products) => {
+      if (!cancelled) {
+        setAllProducts(products);
+        setProductsLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Filter & Control States
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -319,7 +336,11 @@ export default function ShopCatalog() {
             </div>
 
             {/* Product Grid */}
-            {paginatedProducts.length > 0 ? (
+            {productsLoading ? (
+              <div className="bg-white rounded-2xl p-12 text-center border border-stone-200/60">
+                <p className="text-sm font-medium text-stone-600">Loading products…</p>
+              </div>
+            ) : paginatedProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
                 {paginatedProducts.map((product) => {
                   const imageSrc = product.images?.[0] || '/placeholder.jpg';

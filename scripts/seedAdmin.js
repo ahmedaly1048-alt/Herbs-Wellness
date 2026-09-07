@@ -1,45 +1,55 @@
 /**
  * Admin Seed Script
  * ─────────────────
- * Creates the initial admin user in the database.
- * Run once: node scripts/seedAdmin.js
+ * Creates/updates the admin user used to sign in to the admin panel at /admin.
+ * Run: npm run seed:admin
  *
- * Update the ADMIN_* variables below before running.
+ * Credentials: username "admin" / password "admin"
  */
 
 import "dotenv/config";
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 
 const ADMIN_NAME = "Super Admin";
+const ADMIN_USERNAME = "admin";
 const ADMIN_EMAIL = "admin@herbs.com";
-const ADMIN_PASSWORD = "Admin@123"; // Change this!
+const ADMIN_PASSWORD = "admin"; // Admin panel password (username: admin / password: admin)
 
 const seedAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("✅ Connected to MongoDB Atlas");
+    console.log("✅ Connected to MongoDB");
 
-    // Check if admin already exists
-    const existing = await User.findOne({ email: ADMIN_EMAIL });
-    if (existing) {
-      console.log(`⚠️  Admin already exists: ${existing.email}`);
-      process.exit(0);
-    }
+    // Hash manually: "admin" is shorter than the 6-char registration minimum,
+    // so we bypass schema validation here. bcrypt.compare (used by login) still works.
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, salt);
 
-    // Create admin user — bypass role restriction by directly setting role
-    const admin = await User.create({
-      name: ADMIN_NAME,
-      email: ADMIN_EMAIL,
-      password: ADMIN_PASSWORD,
-      role: "admin",
-    });
+    // Upsert so re-running updates the credentials without creating duplicates.
+    const admin = await User.findOneAndUpdate(
+      { $or: [{ username: ADMIN_USERNAME }, { email: ADMIN_EMAIL }] },
+      {
+        $set: {
+          name: ADMIN_NAME,
+          username: ADMIN_USERNAME,
+          email: ADMIN_EMAIL,
+          password: hashedPassword,
+          role: "admin",
+          isActive: true,
+        },
+      },
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
+    );
 
-    console.log(`🎉 Admin created successfully!`);
-    console.log(`   Name:  ${admin.name}`);
-    console.log(`   Email: ${admin.email}`);
-    console.log(`   Role:  ${admin.role}`);
-    console.log(`   ID:    ${admin._id}`);
+    console.log("🎉 Admin ready:");
+    console.log(`   Name:     ${admin.name}`);
+    console.log(`   Username: ${admin.username}`);
+    console.log(`   Email:    ${admin.email}`);
+    console.log(`   Password: ${ADMIN_PASSWORD}`);
+    console.log(`   Role:     ${admin.role}`);
+    console.log(`   Panel:    http://localhost:3000/admin`);
     process.exit(0);
   } catch (error) {
     console.error("❌ Seeding failed:", error.message);

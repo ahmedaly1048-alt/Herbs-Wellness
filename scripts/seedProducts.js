@@ -132,7 +132,7 @@ const seedProducts = async () => {
       await Product.findOneAndUpdate(
         { slug: prod.slug },
         prod,
-        { upsert: true, new: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
       );
       console.log(`📦 Seeded product: ${prod.title} (${prod.slug})`);
     }

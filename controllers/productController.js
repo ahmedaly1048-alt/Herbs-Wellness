@@ -115,7 +115,7 @@ export const updateProduct = async (req, res) => {
   const product = await Product.findOneAndUpdate(
     buildIdQuery(id),
     req.body,
-    { new: true, runValidators: true }
+    { returnDocument: "after", runValidators: true }
   );
 
   if (!product) {

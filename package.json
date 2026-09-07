@@ -1,40 +1,32 @@
 {
-  "name": "herbs-backend",
+  "name": "herbs-wellness",
   "version": "1.0.0",
-  "description": "Herbs Wellness Ecommerce REST API",
+  "description": "Herbs & Wellness — Next.js frontend + Express/MongoDB REST API (monorepo-style single package)",
+  "private": true,
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js",
+    "dev": "concurrently -k -n BACKEND,FRONTEND -c green,cyan \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "node --watch index.js",
+    "dev:frontend": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "start:backend": "node index.js",
+    "lint": "eslint",
     "seed:admin": "node scripts/seedAdmin.js",
     "seed:products": "node scripts/seedProducts.js"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "axios": "^1.20.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.6",
     "dotenv": "^16.5.0",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^9.9.4",
-    "morgan": "^1.10.0"
-  }
-}
-{
-  "name": "my-app",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@gsap/react": "^2.1.2",
     "gsap": "^3.15.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^1.33.0",
+    "mongoose": "^9.9.4",
+    "morgan": "^1.10.0",
     "next": "16.3.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -42,10 +34,12 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.13",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
     "tailwindcss": "^4",

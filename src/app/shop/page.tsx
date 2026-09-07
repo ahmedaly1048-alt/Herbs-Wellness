@@ -3,10 +3,12 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 // import { ShoppingCart } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Data and Utilities
 import { PRODUCTS } from '@/src/data/product';
+import { fetchProducts } from '@/src/lib/api';
+import type { Product } from '@/src/types/product';
 
 // Global Layout Components
 import WhatsAppButton from '@/src/components/WhatsAppButton';
@@ -29,6 +31,19 @@ import ProductGrid from '@/src/components/ProductGrid';
 export default function ShopPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+
+  // Load "featured" products from the Express backend when available;
+  // fetchProducts() falls back to the static catalog if the API is offline.
+  useEffect(() => {
+    let cancelled = false;
+    fetchProducts({ featured: "true" }).then((fetched) => {
+      if (!cancelled) setProducts(fetched.length > 0 ? fetched : PRODUCTS);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useGSAP(
     () => {
@@ -68,8 +83,8 @@ export default function ShopPage() {
         <ConcernsGrid />
         <HolisticLivingBanner />
 
-        {/* Pass PRODUCTS array to fix TypeScript error */}
-        <ProductGrid products={PRODUCTS} />
+        {/* Pass products from backend API (falls back to static catalog) */}
+        <ProductGrid products={products} />
 
 
         <CartDrawer />

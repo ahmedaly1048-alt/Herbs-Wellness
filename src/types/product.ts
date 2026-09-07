@@ -28,6 +28,7 @@ export type ProductReview = {
 
 export type Product = {
   id: string;
+  _id?: string; // MongoDB _id returned by the backend API
   title: string;
   subtitle?: string;
   slug: string; // The URL slug (e.g. 'glucoreg-gluconeu-set')

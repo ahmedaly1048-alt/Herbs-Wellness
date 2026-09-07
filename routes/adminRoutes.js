@@ -1,12 +1,26 @@
 import express from "express";
+import { adminLogin } from "../controllers/adminAuthController.js";
+import { uploadImage } from "../controllers/adminUploadController.js";
 import protect from "../middlewares/authMiddleware.js";
 import authorize from "../middlewares/roleMiddleware.js";
 import User from "../models/User.js";
+import Product from "../models/Product.js";
 
 const router = express.Router();
 
-// All admin routes require: valid JWT + admin role
+// ─── PUBLIC ROUTE ─────────────────────────────────────────────────────────────
+// ─── @desc    Admin login (username or email + password — admin role only)
+// ─── @route   POST /api/admin/login
+// ─── @access  Public (must be an existing admin account)
+router.post("/login", adminLogin);
+
+// All admin routes below require: valid JWT + admin role
 router.use(protect, authorize("admin"));
+
+// ─── @desc    Prepare an image for product storage
+// ─── @route   POST /api/admin/upload
+// ─── @access  Private/Admin
+router.post("/upload", uploadImage);
 
 // ─── @desc    Get all users
 // ─── @route   GET /api/admin/users
@@ -84,6 +98,11 @@ router.delete("/users/:id", async (req, res) => {
 // ─── @route   GET /api/admin/dashboard
 // ─── @access  Private/Admin
 router.get("/dashboard", async (req, res) => {
+  const [totalProducts, featuredProducts, lowStockProducts] = await Promise.all([
+    Product.countDocuments(),
+    Product.countDocuments({ featured: true }),
+    Product.countDocuments({ stock: { $lte: 10 } }),
+  ]);
   const totalUsers = await User.countDocuments({ role: "user" });
   const totalAdmins = await User.countDocuments({ role: "admin" });
   const activeUsers = await User.countDocuments({ isActive: true });
@@ -94,6 +113,9 @@ router.get("/dashboard", async (req, res) => {
       totalUsers,
       totalAdmins,
       activeUsers,
+      totalProducts,
+      featuredProducts,
+      lowStockProducts,
       loggedInAdmin: req.user.toSafeObject(),
     },
   });
