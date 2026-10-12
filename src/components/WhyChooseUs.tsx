@@ -4,24 +4,34 @@ import React from 'react';
 
 const features = [
   {
-    tagline: 'GOD-GIVEN PLANTS',
-    title: "Medicinal plants inspired by God's creation",
-    description: "Crafted with carefully selected medicinal plants inspired by God's creation.",
+    tagline: 'GOD-INSPIRED WELLNESS',
+    title: 'Rooted in God’s creation, guided by knowledge',
+    description:
+      'We believe God has placed valuable resources within nature. We work with carefully selected plants and natural resources as part of a thoughtful, integrative approach to wellness.',
   },
   {
-    tagline: 'HOLISTIC CONSULTATIONS',
-    title: 'Guidance tailored to your health goals',
-    description: 'One-on-one wellness guidance tailored to your health goals.',
+    tagline: 'GOD’S PROVISION, CAREFULLY SELECTED',
+    title: 'Medicinal plants chosen with care and purpose.',
+    description:
+      'We value the medicinal plants found in nature and carefully select them as part of our commitment to thoughtful, responsible herbal wellness.',
   },
   {
-    tagline: 'TRUSTED FORMULATIONS',
-    title: 'Quality ingredients and careful standards',
-    description: 'Thoughtfully formulated with quality ingredients and high manufacturing standards.',
+    tagline: 'PERSONALIZED INTEGRATIVE SUPPORT',
+    title: 'Looking beyond symptoms',
+    description:
+      'We look beyond symptoms to understand the individual, providing guidance shaped around each person’s needs, goals, and overall wellbeing.',
   },
   {
-    tagline: 'NATIONWIDE & WORLDWIDE DELIVERY',
-    title: 'Wellness delivered wherever you are',
-    description: 'Delivering wellness across Nigeria and to customers around the world.',
+    tagline: 'QUALITY & RESPONSIBLE FORMULATION',
+    title: 'Thoughtful products, carefully developed',
+    description:
+      'We prioritize carefully selected ingredients, responsible formulation, and quality standards in the products we develop.',
+  },
+  {
+    tagline: 'WELLNESS BEYOND BORDERS',
+    title: 'Serving you wherever you are',
+    description:
+      'We make our wellness products and educational resources accessible to individuals and families in Nigeria and beyond.',
   },
 ];
 
@@ -32,18 +42,15 @@ export default function WhyChooseUs() {
         {/* Header Section */}
         <div className="max-w-3xl space-y-4">
           <span className="text-xs font-bold uppercase tracking-widest text-stone-400">
-            WHY CHOOSE HERBS & WELLNESS
+            THE AHERBS APPROACH
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif text-stone-900 leading-tight">
-            Healing Inspired by God&apos;s Creation
+            Rooted in faith, guided by wisdom, created for wellness.
           </h2>
-          <p className="text-stone-600 text-sm md:text-base font-light leading-relaxed">
-            We believe God placed healing within creation. Through holistic consultations, evidence-informed natural care, nutrition, lifestyle guidance, and carefully formulated plant-based remedies, we help individuals pursue lasting wellness while treating every person with compassion and dignity.
-          </p>
         </div>
 
-        {/* 4-Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 5-Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
           {features.map((item, index) => (
             <div
               key={index}

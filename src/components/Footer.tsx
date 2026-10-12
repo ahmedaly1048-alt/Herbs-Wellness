@@ -130,7 +130,7 @@ export default function Footer() {
                 SUPPORT
               </span>
               <ul className="space-y-3 text-xs text-stone-200 font-light">
-                <li><Link href="/consultation" className="hover:text-white transition-colors">Consultation</Link></li>
+                <li><Link href="/hub/consultation" className="hover:text-white transition-colors">Consultation</Link></li>
                 <li><Link href="/track-order" className="hover:text-white transition-colors">Track an order</Link></li>
                 <li><Link href="/about" className="hover:text-white transition-colors">About Herbs &amp; Wellness Farmacy</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>

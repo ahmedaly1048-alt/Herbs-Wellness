@@ -8,6 +8,13 @@ export interface CartItem {
   selectedVariant?: string;
 }
 
+const getItemPrice = (item: CartItem) => {
+  const selectedVariant = item.product.variants?.find(
+    (variant) => variant.id === item.selectedVariant
+  );
+  return selectedVariant?.price ?? item.product.price ?? item.product.variants?.[0]?.price ?? 0;
+};
+
 interface CartStore {
   items: CartItem[];
   isOpen: boolean;
@@ -15,9 +22,9 @@ interface CartStore {
   openCart: () => void;
   closeCart: () => void;
   clearToast: () => void;
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem: (product: Product, quantity?: number, selectedVariant?: string) => void;
+  removeItem: (productId: string, selectedVariant?: string) => void;
+  updateQuantity: (productId: string, quantity: number, selectedVariant?: string) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getSubtotal: () => number;
@@ -34,17 +41,22 @@ export const useCartStore = create<CartStore>()(
       closeCart: () => set({ isOpen: false }),
       clearToast: () => set({ toastMessage: null }),
 
-      addItem: (product, quantity = 1) => {
+      addItem: (product, quantity = 1, selectedVariant) => {
         set((state) => {
           const existingIndex = state.items.findIndex(
-            (item) => item.product.id === product.id
+            (item) =>
+              item.product.id === product.id &&
+              item.selectedVariant === selectedVariant
           );
 
           let updatedItems = [...state.items];
           if (existingIndex > -1) {
-            updatedItems[existingIndex].quantity += quantity;
+            updatedItems[existingIndex] = {
+              ...updatedItems[existingIndex],
+              quantity: updatedItems[existingIndex].quantity + quantity,
+            };
           } else {
-            updatedItems = [...state.items, { product, quantity }];
+            updatedItems = [...state.items, { product, quantity, selectedVariant }];
           }
 
           return {
@@ -55,30 +67,48 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
-      removeItem: (productId) => {
+      removeItem: (productId, selectedVariant) => {
         set((state) => {
-          const itemToRemove = state.items.find((item) => item.product.id === productId);
+          const itemToRemove = state.items.find(
+            (item) =>
+              item.product.id === productId &&
+              item.selectedVariant === selectedVariant
+          );
           const productName = itemToRemove?.product.title || 'Item';
 
           return {
-            items: state.items.filter((item) => item.product.id !== productId),
+            items: state.items.filter(
+              (item) =>
+                item.product.id !== productId ||
+                item.selectedVariant !== selectedVariant
+            ),
             toastMessage: `"${productName}" removed from cart.`,
           };
         });
       },
 
-      updateQuantity: (productId, quantity) => {
+      updateQuantity: (productId, quantity, selectedVariant) => {
         set((state) => {
           if (quantity <= 0) {
-            const itemToRemove = state.items.find((item) => item.product.id === productId);
+            const itemToRemove = state.items.find(
+              (item) =>
+                item.product.id === productId &&
+                item.selectedVariant === selectedVariant
+            );
             return {
-              items: state.items.filter((item) => item.product.id !== productId),
+              items: state.items.filter(
+                (item) =>
+                  item.product.id !== productId ||
+                  item.selectedVariant !== selectedVariant
+              ),
               toastMessage: `"${itemToRemove?.product.title || 'Item'}" removed from cart.`,
             };
           }
           return {
             items: state.items.map((item) =>
-              item.product.id === productId ? { ...item, quantity } : item
+              item.product.id === productId && item.selectedVariant === selectedVariant
+                ? { ...item, quantity }
+                : item
             ),
           };
         });
@@ -92,11 +122,7 @@ export const useCartStore = create<CartStore>()(
 
       getSubtotal: () => {
         return get().items.reduce((total, item) => {
-          const price =
-            item.product.isVariable && item.product.variants?.length
-              ? item.product.variants[0].price
-              : item.product.price || 0;
-          return total + price * item.quantity;
+          return total + getItemPrice(item) * item.quantity;
         }, 0);
       },
     }),

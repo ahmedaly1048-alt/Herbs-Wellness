@@ -88,7 +88,7 @@ export default function TherapySessionsPage() {
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
-                  href="/consultation"
+                  href="/hub/consultation"
                   className="inline-flex items-center gap-2 bg-[#2D5A43] hover:bg-[#234734] text-white text-xs font-semibold px-6 py-3.5 rounded-full transition-all shadow-2xs"
                 >
                   <span>Start Your Healing Journey</span>
@@ -157,7 +157,7 @@ export default function TherapySessionsPage() {
             {/* Bottom Action Button */}
             <div>
               <Link
-                href="/consultation"
+                href="/hub/consultation"
                 className="inline-flex items-center gap-2 bg-[#2D5A43] hover:bg-[#234734] text-white text-xs font-semibold px-6 py-3.5 rounded-full transition-all shadow-2xs"
               >
                 <span>Start Your Healing Journey</span>

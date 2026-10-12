@@ -9,10 +9,6 @@ import WhatsAppButton from '@/src/components/WhatsAppButton';
 import ShopNavbar from '@/src/components/ShopNavbar';
 
 export default function ConsultationPage() {
-  const handleConsultationPayment = () => {
-    alert('Redirecting to Paystack for Clinical Consultation (₦30,000.00)...');
-  };
-
   return (
     <div className="min-h-screen bg-stone-50/50 text-stone-800 font-sans flex flex-col justify-between">
       <div>
@@ -105,12 +101,12 @@ export default function ConsultationPage() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 block">TOTAL</span>
                   <span className="text-xl md:text-2xl font-bold text-stone-900">₦30,000.00</span>
                 </div>
-                <button
-                  onClick={handleConsultationPayment}
-                  className="bg-[#526D53] hover:bg-[#3d533e] text-white text-xs md:text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
+                <Link
+                  href="/hub/booking"
+                  className="bg-[#526D53] hover:bg-[#3d533e] text-white text-xs md:text-sm font-semibold px-6 py-3 rounded-xl transition-all shadow-sm inline-flex items-center justify-center"
                 >
                   Book Service
-                </button>
+                </Link>
               </div>
             </div>
           </div>

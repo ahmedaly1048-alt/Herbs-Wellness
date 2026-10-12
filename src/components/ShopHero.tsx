@@ -50,28 +50,47 @@ export default function ShopHero() {
         {/* Left Content Card */}
         <div className="lg:col-span-6 bg-white/90 backdrop-blur-sm p-8 md:p-12 rounded-3xl shadow-sm border border-stone-200/50 relative">
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 leading-[1.15] mb-6 tracking-tight">
-            Where God&apos;s <br />
-            Healing Meets <br />
-            Nature.
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-stone-900 leading-[1.15] mb-6 tracking-tight uppercase">
+            WHERE GOD&apos;S <br />
+            HEALING MEETS <br />
+            NATURE
           </h1>
 
-          {/* Scripture Pill Quote */}
-          <div className="inline-flex flex-wrap items-center gap-2 bg-stone-100 px-3.5 py-1.5 rounded-full text-xs md:text-sm text-stone-700 font-medium mb-6">
-            <span>Their fruit will serve for food and their leaves for healing.</span>
-            <span className="bg-white px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-stone-500 shadow-2xs">
-              Ezekiel 47:12
-            </span>
+          <div className="space-y-3 mb-6">
+            <div className="flex flex-wrap items-center gap-2 bg-stone-100 px-3.5 py-2 rounded-full text-xs md:text-sm text-stone-700 font-medium">
+              <span>“Their fruit will serve for food, and their leaves for healing.”</span>
+              <span className="bg-white px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-stone-500 shadow-2xs">
+                Ezekiel 47:12
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 bg-stone-100 px-3.5 py-2 rounded-full text-xs md:text-sm text-stone-700 font-medium">
+              <span>“He… made the earth for you… and produced thereby various plants.”</span>
+              <span className="bg-white px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-stone-500 shadow-2xs">
+                Qur’an 20:53
+              </span>
+            </div>
           </div>
 
-          <p className="text-stone-600 text-sm md:text-base font-light leading-relaxed mb-8">
-            Inspired by Ezekiel 47:12, we are a faith based brand and we believe that God placed healing within nature. Our mission is to help individuals and families rediscover wellness through holistic medicine, nutrition, lifestyle transformation and compassionate care.
-          </p>
+          <div className="space-y-4 text-stone-600 text-sm md:text-base font-light leading-relaxed mb-8">
+            <p>
+              <span className="font-semibold text-stone-700">Yorùbá / Ifá Traditional Understanding</span>
+            </p>
+            <p>
+              Olódùmarè, the Creator, is the source of life and nature’s provisions, through which people seek healing.
+            </p>
+            <p>
+              We believe God has placed healing within nature and entrusted humanity with its care.
+            </p>
+            <p>
+              Guided by faith, traditional wisdom, and respect for nature, our integrative approach brings together herbal wellness, nutrition, and lifestyle guidance to help individuals understand their bodies, make informed health choices, and pursue holistic wellbeing.
+            </p>
+          </div>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-4 mb-8">
             <Link
-              href="#products"
+              href="/shop/catalog"
               className="inline-flex items-center gap-2 bg-[#2D5A43] hover:bg-[#234734] text-white font-medium text-sm px-6 py-3.5 rounded-full transition-all shadow-sm"
             >
               <span>Shop the collection</span>
@@ -140,8 +159,8 @@ export default function ShopHero() {
               <ChevronRight className="w-5 h-5" />
             </button>
 
-            {/* Vertical Slider Dots Indicator (Middle Right End) */}
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-2 bg-black/30 backdrop-blur-md px-2 py-3 rounded-full">
+            {/* Slider Dots Indicator */}
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-4 z-20 flex flex-row items-center gap-2 bg-black/30 backdrop-blur-md px-3 py-2 rounded-full md:flex-col md:left-auto md:right-4 md:top-1/2 md:bottom-auto md:-translate-y-1/2 md:-translate-x-0 md:px-2 md:py-3">
               {HERO_IMAGES.map((_, idx) => (
                 <button
                   key={idx}
@@ -149,8 +168,8 @@ export default function ShopHero() {
                   aria-label={`Go to slide ${idx + 1}`}
                   className={`transition-all rounded-full ${
                     idx === currentIndex
-                      ? 'w-2.5 h-2.5 bg-white scale-110'
-                      : 'w-2 h-2 bg-white/50 hover:bg-white/80'
+                      ? 'w-2.5 h-2.5 bg-white scale-110 md:w-2.5 md:h-2.5'
+                      : 'w-2 h-2 bg-white/50 hover:bg-white/80 md:w-2 md:h-2'
                   }`}
                 />
               ))}
@@ -158,7 +177,7 @@ export default function ShopHero() {
 
           </div>
 
-          {/* Overlay Floating Badge */}
+          {/* Overlay Floating Badge
           <div className="absolute -bottom-6 -left-2 md:left-2 max-w-xs bg-white/95 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-stone-200/80 z-20">
             <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 block mb-1">
               WHY CHOOSE US
@@ -169,7 +188,7 @@ export default function ShopHero() {
             <p className="text-[11px] text-stone-500 font-light leading-normal">
               We help people move beyond pills and toward guided natural healing support.
             </p>
-          </div>
+          </div> */}
 
         </div>
 

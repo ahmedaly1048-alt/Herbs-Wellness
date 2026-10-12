@@ -3,16 +3,22 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Star, Heart, Share2, Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Star, Heart, Share2, Minus, Plus } from 'lucide-react';
 
 import ShopNavbar from '@/src/components/ShopNavbar';
+import CartDrawer from '@/src/components/CartDrawer';
 import Footer from '@/src/components/Footer';
 import WhatsAppButton from '@/src/components/WhatsAppButton';
 import { Product } from '@/src/types/product';
 import { PRODUCTS } from '@/src/data/product';
 import ProductGrid from '@/src/components/ProductGrid';
+import { useCartStore } from '@/src/store/useCartStore';
 
 export default function ProductClientView({ product }: { product: Product }) {
+  const router = useRouter();
+  const addItem = useCartStore((state) => state.addItem);
+  const closeCart = useCartStore((state) => state.closeCart);
   const [selectedVariant, setSelectedVariant] = useState(
     product.isVariable && product.variants ? product.variants[0] : null
   );
@@ -21,6 +27,16 @@ export default function ProductClientView({ product }: { product: Product }) {
 
   const unitPrice = selectedVariant ? selectedVariant.price : (product.price || 0);
   const subtotal = unitPrice * quantity;
+
+  const handleAddToCart = () => {
+    addItem(product, quantity, selectedVariant?.id);
+  };
+
+  const handleBuyNow = () => {
+    addItem(product, quantity, selectedVariant?.id);
+    closeCart();
+    router.push('/checkout');
+  };
 
   // Filter related items for "Pairs well with this"
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
@@ -71,6 +87,30 @@ export default function ProductClientView({ product }: { product: Product }) {
                   ₦{unitPrice.toLocaleString()}
                 </span>
               </div>
+
+              {product.isVariable && product.variants && product.variants.length > 0 && (
+                <fieldset className="space-y-2">
+                  <legend className="text-xs font-semibold uppercase text-stone-500">Choose an option</legend>
+                  <div className="flex flex-wrap gap-2">
+                    {product.variants.map((variant) => (
+                      <button
+                        key={variant.id}
+                        type="button"
+                        aria-pressed={selectedVariant?.id === variant.id}
+                        disabled={variant.stock === 0}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`rounded-full border px-4 py-2 text-xs transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                          selectedVariant?.id === variant.id
+                            ? 'border-[#2D5A43] bg-[#EBF2EE] text-[#2D5A43]'
+                            : 'border-stone-300 bg-white text-stone-600 hover:border-stone-500'
+                        }`}
+                      >
+                        {variant.name} · ₦{variant.price.toLocaleString()}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              )}
 
               {/* Rating & Action Links */}
               <div className="flex items-center gap-4 text-xs text-stone-600 border-y border-stone-200/80 py-3">
@@ -126,12 +166,14 @@ export default function ProductClientView({ product }: { product: Product }) {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
+                    onClick={handleAddToCart}
                     className="bg-[#2D5A43] hover:bg-[#234734] text-white text-xs font-semibold py-3.5 rounded-full transition-all"
                   >
                     Add to cart
                   </button>
                   <button
                     type="button"
+                    onClick={handleBuyNow}
                     className="bg-[#D9C4AC] hover:bg-[#cbb297] text-stone-900 text-xs font-semibold py-3.5 rounded-full transition-all"
                   >
                     Buy now
@@ -170,7 +212,7 @@ export default function ProductClientView({ product }: { product: Product }) {
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
                   className={`text-xs px-4 py-2 rounded-full font-medium transition-all ${
                     activeTab === tab.id
                       ? 'bg-white text-stone-900 shadow-2xs border border-stone-200/80'
@@ -276,6 +318,7 @@ export default function ProductClientView({ product }: { product: Product }) {
         </main>
       </div>
 
+      <CartDrawer />
       <Footer />
       <WhatsAppButton />
     </div>

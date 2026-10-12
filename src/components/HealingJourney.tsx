@@ -8,23 +8,30 @@ const steps = [
   {
     step: "01",
     icon: ClipboardList,
-    title: "Receive Your Personalized Wellness Plan",
+    title: "PERSONALIZED CONSULTATIONS",
     description:
-      "Based on your consultation, we create a tailored holistic wellness plan that may include nutrition guidance, lifestyle recommendations, and carefully selected plant-based products to support your health.",
+      "Your Health. Your Needs. Your Wellness Journey. Every individual is different. We take time to understand your health concerns and individual needs to guide a personalized approach to wellness through nutrition, herbal wellness, lifestyle guidance, and integrative care.",
   },
   {
     step: "02",
     icon: Leaf,
-    title: "Begin Your Wellness Journey",
+    title: "YOUR PERSONALIZED WELLNESS PLAN",
     description:
-      "Follow your personalized plan with confidence. Our goal is to support your body's natural ability to function well through holistic care and healthy daily habits.",
+      "Following your consultation, we develop a plan tailored to your needs. This may include nutrition guidance, lifestyle recommendations, and carefully selected herbal wellness products where appropriate.",
   },
   {
     step: "03",
     icon: CalendarHeart,
-    title: "Ongoing Care & Support",
+    title: "PUT YOUR PLAN INTO PRACTICE",
     description:
-      "Healing is a journey, not a one-time event. We stay connected through follow-up consultations, progress reviews, and adjustments to your wellness plan as your needs evolve.",
+      "We guide you in applying your personalized recommendations to everyday life, helping you build healthy habits and make informed choices about your wellbeing.",
+  },
+  {
+    step: "04",
+    icon: CalendarHeart,
+    title: "CONTINUED SUPPORT & MONITORING",
+    description:
+      "Wellness needs can change over time. Through follow-up consultations and progress reviews, we assess your progress and adjust your plan when appropriate.",
   },
 ];
 
@@ -48,8 +55,8 @@ export default function HealingJourney() {
           </p>
         </div>
 
-        {/* 3-Card Symmetrical Step Process */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        {/* 4-Card Symmetrical Step Process */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
           {steps.map((item, index) => {
             const Icon = item.icon;
             return (
@@ -84,7 +91,7 @@ export default function HealingJourney() {
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-4 pt-2">
           <Link
-            href="/consultation"
+            href="/hub/consultation"
             className="inline-flex items-center gap-2 bg-[#2D5A43] hover:bg-[#234734] text-white text-xs font-semibold px-6 py-3.5 rounded-full transition-all shadow-xs hover:shadow-md"
           >
             <span>Start Your Healing Journey</span>

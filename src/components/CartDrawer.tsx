@@ -85,14 +85,12 @@ export default function CartDrawer() {
                 <p className="text-stone-500 text-sm">Your shopping cart is empty.</p>
               </div>
             ) : (
-              items.map(({ product, quantity }) => {
-                const price =
-                  product.isVariable && product.variants?.length
-                    ? product.variants[0].price
-                    : product.price || 0;
+              items.map(({ product, quantity, selectedVariant }) => {
+                const variant = product.variants?.find((item) => item.id === selectedVariant);
+                const price = variant?.price ?? product.price ?? product.variants?.[0]?.price ?? 0;
 
                 return (
-                  <div key={product.id} className="flex gap-4 pb-4 border-b border-stone-100">
+                  <div key={`${product.id}:${selectedVariant || ''}`} className="flex gap-4 pb-4 border-b border-stone-100">
                     <div className="relative w-20 h-20 bg-stone-100 rounded-lg overflow-hidden shrink-0">
                       <Image
                         src={product.images[0] || '/placeholder-product.jpg'}
@@ -109,7 +107,7 @@ export default function CartDrawer() {
                             {product.title}
                           </h3>
                           <button
-                            onClick={() => removeItem(product.id)}
+                            onClick={() => removeItem(product.id, selectedVariant)}
                             className="text-stone-400 hover:text-rose-500 transition-colors p-1"
                             aria-label="Remove product"
                           >
@@ -125,14 +123,14 @@ export default function CartDrawer() {
                       <div className="flex items-center gap-3 mt-2">
                         <div className="flex items-center border border-stone-200 rounded-full px-2 py-0.5">
                           <button
-                            onClick={() => updateQuantity(product.id, quantity - 1)}
+                            onClick={() => updateQuantity(product.id, quantity - 1, selectedVariant)}
                             className="p-1 hover:text-stone-900 text-stone-500"
                           >
                             <Minus className="w-3 h-3" />
                           </button>
                           <span className="text-xs font-semibold px-2">{quantity}</span>
                           <button
-                            onClick={() => updateQuantity(product.id, quantity + 1)}
+                            onClick={() => updateQuantity(product.id, quantity + 1, selectedVariant)}
                             className="p-1 hover:text-stone-900 text-stone-500"
                           >
                             <Plus className="w-3 h-3" />

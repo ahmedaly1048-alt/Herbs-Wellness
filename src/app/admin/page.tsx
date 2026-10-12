@@ -19,6 +19,7 @@ import {
   Users,
   Star,
   AlertTriangle,
+  Pencil,
 } from 'lucide-react';
 import { Product } from '@/src/types/product';
 
@@ -110,6 +111,7 @@ export default function AdminPage() {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // ─── Image upload ───────────────────────────────────────────────────────────
@@ -361,8 +363,11 @@ export default function AdminPage() {
     if (variants) payload.variants = variants;
 
     try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const endpoint = editingProductId
+        ? `/api/products/${encodeURIComponent(editingProductId)}`
+        : '/api/products';
+      const res = await fetch(endpoint, {
+        method: editingProductId ? 'PATCH' : 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -370,17 +375,50 @@ export default function AdminPage() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Failed to create product.');
+      if (!res.ok) throw new Error(data.message || 'Failed to save product.');
 
-      setFormSuccess(`Product "${data.product.title}" created successfully.`);
+      setFormSuccess(
+        `Product "${data.product.title}" ${editingProductId ? 'updated' : 'created'} successfully.`
+      );
       setForm(EMPTY_FORM);
+      setEditingProductId(null);
       loadProducts();
       loadDashboard();
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Failed to create product.');
+      setFormError(err instanceof Error ? err.message : 'Failed to save product.');
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingProductId(String(product._id || product.id || product.slug));
+    setForm({
+      title: product.title,
+      slug: product.slug,
+      category: product.category,
+      subtitle: product.subtitle || '',
+      price: product.price?.toString() || '',
+      stock: product.stock?.toString() || '',
+      description: product.description,
+      image: product.images?.[0] || '',
+      featured: Boolean(product.featured),
+      requiresConsultation: Boolean(product.requiresConsultation),
+      isVariable: Boolean(product.isVariable),
+      variantsJson: product.variants?.length
+        ? JSON.stringify(product.variants, null, 2)
+        : '',
+    });
+    setFormError('');
+    setFormSuccess('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setEditingProductId(null);
+    setForm(EMPTY_FORM);
+    setFormError('');
+    setFormSuccess('');
   };
 
   const handleDelete = async (product: Product) => {
@@ -579,9 +617,11 @@ export default function AdminPage() {
               <Plus className="w-4.5 h-4.5 text-[#2D5A43]" />
             </span>
             <div>
-              <h2 className="font-serif font-bold text-lg text-stone-900">Add new product</h2>
+              <h2 className="font-serif font-bold text-lg text-stone-900">
+                {editingProductId ? 'Edit product' : 'Add new product'}
+              </h2>
               <p className="text-xs text-stone-500 -mt-0.5">
-                Prices are in Naira (₦). New items appear in the store immediately.
+                Prices are in Naira (₦). Changes appear in the store immediately.
               </p>
             </div>
           </div>
@@ -852,25 +892,21 @@ export default function AdminPage() {
                 {submitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Creating…
+                    Saving…
                   </>
                 ) : (
                   <>
-                    <Plus className="w-4 h-4" />
-                    Publish product
+                    {editingProductId ? <Pencil className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    {editingProductId ? 'Save changes' : 'Publish product'}
                   </>
                 )}
               </button>
               <button
-                type="reset"
-                onClick={() => {
-                  setForm(EMPTY_FORM);
-                  setFormError('');
-                  setFormSuccess('');
-                }}
+                type="button"
+                onClick={cancelEdit}
                 className={btnGhost}
               >
-                Clear form
+                {editingProductId ? 'Cancel edit' : 'Clear form'}
               </button>
             </div>
           </form>
@@ -971,18 +1007,29 @@ export default function AdminPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <button
-                          onClick={() => handleDelete(product)}
-                          disabled={deletingId === String(product.id || product.slug)}
-                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-white border border-red-200 hover:bg-red-600 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-                        >
-                          {deletingId === String(product.id || product.slug) ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <Trash2 className="w-3.5 h-3.5" />
-                          )}
-                          Delete
-                        </button>
+                        <div className="inline-flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleEdit(product)}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2D5A43] hover:bg-[#2D5A43]/10 border border-[#2D5A43]/20 px-3 py-1.5 rounded-full transition-colors"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(product)}
+                            disabled={deletingId === String(product._id || product.id || product.slug)}
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:text-white border border-red-200 hover:bg-red-600 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
+                          >
+                            {deletingId === String(product._id || product.id || product.slug) ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-3.5 h-3.5" />
+                            )}
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

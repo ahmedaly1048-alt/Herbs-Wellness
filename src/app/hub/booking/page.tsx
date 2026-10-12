@@ -3,6 +3,7 @@
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Mail, Phone, Leaf } from 'lucide-react';
 import { FaInstagram } from 'react-icons/fa';
@@ -10,7 +11,8 @@ import WhatsAppButton from '@/src/components/WhatsAppButton';
 
 export default function BookingPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [subtotal, setSubtotal] = useState<number>(0);
+  const router = useRouter();
+  const [subtotal, setSubtotal] = useState<number>(20000);
 
   useGSAP(
     () => {
@@ -25,6 +27,11 @@ export default function BookingPage() {
 
   const handleBookNow = () => {
     setSubtotal(20000);
+  };
+
+  const handleCheckout = () => {
+    if (subtotal <= 0) return;
+    router.push('/checkout?source=booking&service=Herbal%20Consultation&amount=20000');
   };
 
   return (
@@ -138,6 +145,7 @@ export default function BookingPage() {
 
               <button
                 type="button"
+                onClick={handleCheckout}
                 disabled={subtotal === 0}
                 className="w-full bg-[#9ACD32] hover:bg-[#88B04B] disabled:opacity-50 text-white text-xs font-bold py-3 rounded transition-colors duration-200"
               >

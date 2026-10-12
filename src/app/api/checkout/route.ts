@@ -1,19 +1,29 @@
 import { NextResponse } from 'next/server';
 
+type CheckoutItem = {
+  quantity: number;
+  selectedVariant?: string;
+  product: {
+    price?: number;
+    variants?: { id: string; price: number }[];
+  };
+};
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { items, customer, paymentMethod } = body;
+    const body: { items?: CheckoutItem[] } = await req.json();
+    const { items } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
     }
 
     // Calculate Total Server Side to prevent tampering
-    const totalAmount = items.reduce((acc: number, item: any) => {
-      const itemPrice = item.product.isVariable && item.product.variants?.length
-        ? item.product.variants[0].price
-        : item.product.price || 0;
+    const totalAmount = items.reduce((acc, item) => {
+      const variant = item.product.variants?.find(
+        (productVariant) => productVariant.id === item.selectedVariant
+      );
+      const itemPrice = variant?.price ?? item.product.price ?? item.product.variants?.[0]?.price ?? 0;
       return acc + itemPrice * item.quantity;
     }, 0);
 
@@ -30,7 +40,7 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to process order' },
       { status: 500 }

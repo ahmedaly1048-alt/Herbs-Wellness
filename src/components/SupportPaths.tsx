@@ -53,12 +53,12 @@ export default function SupportPaths() {
         </div>
 
         {/* 2 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 pt-2">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:gap-8 pt-2">
           {supportPaths.map((card, index) => (
             <Link
               key={index}
               href={card.href}
-              className="group relative h-[420px] sm:h-[480px] lg:h-[520px] rounded-3xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-500 flex flex-col justify-end p-7 sm:p-9"
+              className="group relative h-[240px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[440px] rounded-3xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-500 flex flex-col justify-end p-4 sm:p-6 md:p-7 lg:p-8"
             >
               {/* Card Background Image */}
               <Image
@@ -74,23 +74,23 @@ export default function SupportPaths() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/5 transition-opacity duration-300 group-hover:from-black/90 group-hover:via-black/50" />
 
               {/* Card Content at Bottom */}
-              <div className="relative z-10 space-y-2 text-white">
-                <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.16em] text-stone-300/90 block">
+              <div className="relative z-10 space-y-1.5 sm:space-y-2 text-white">
+                <span className="text-[9px] sm:text-[10px] lg:text-xs font-semibold uppercase tracking-[0.16em] text-stone-300/90 block">
                   {card.tagline}
                 </span>
 
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-white font-normal leading-tight">
+                <h3 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-serif text-white font-normal leading-tight">
                   {card.title}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-stone-200/90 font-light leading-relaxed max-w-md pt-1">
+                <p className="text-[10px] sm:text-xs md:text-sm text-stone-200/90 font-light leading-relaxed max-w-md pt-0.5 sm:pt-1">
                   {card.description}
                 </p>
 
-                <div className="pt-3">
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-white group-hover:text-stone-200 transition-colors">
+                <div className="pt-1.5 sm:pt-3">
+                  <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm font-medium text-white group-hover:text-stone-200 transition-colors">
                     <span>Explore</span>
-                    <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
                 </div>
               </div>

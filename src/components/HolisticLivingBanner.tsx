@@ -27,10 +27,11 @@ export default function HolisticLivingBanner() {
               HOLISTIC LIVING
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif leading-tight">
-              We don&apos;t do pills. We help you heal with nature.
+              More Than Symptom Relief. <br />
+              A Whole-Person Approach.
             </h2>
             <p className="text-xs md:text-sm text-stone-200 font-light leading-relaxed">
-              Healing support at Herbs &amp; Wellness is built around plants, food, and lifestyle change. The goal is not just temporary relief, but a more natural path to long-term wellness.
+              We look beyond symptoms, bringing together herbal wellness, nutrition, and lifestyle guidance to support informed health choices and overall wellbeing.
             </p>
           </div>
 

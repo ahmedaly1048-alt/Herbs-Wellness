@@ -26,7 +26,7 @@ const healingTracks = [
     href: "/shop/therapy/hypertension",
   },
   {
-    title: "Men's Reproductive Health",
+    title: "Men&apos;s Reproductive Health",
     href: "/shop/therapy/mens-reproductive",
   },
   {
@@ -66,18 +66,12 @@ export default function ShopNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isTherapyOpen, setIsTherapyOpen] = useState(false);
   const [isExploreOpen, setIsExploreOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const exploreRef = useRef<HTMLDivElement>(null);
 
   const openCart = useCartStore((state) => state.openCart);
   const totalItems = useCartStore((state) => state.getTotalItems());
-
-  // Prevent SSR hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Handle click outside dropdown to close
   useEffect(() => {
@@ -113,13 +107,6 @@ export default function ShopNavbar() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isTherapyOpen, isExploreOpen]);
-
-  // Close dropdown on route change
-  useEffect(() => {
-    setIsTherapyOpen(false);
-    setIsExploreOpen(false);
-    setIsOpen(false);
-  }, [pathname]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -393,7 +380,7 @@ export default function ShopNavbar() {
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:bg-[#EFEBE1] active:bg-[#E6E0D4] transition-colors duration-150 relative cursor-pointer"
             >
               <ShoppingBag className="w-[18px] h-[18px] sm:w-5 sm:h-5 stroke-[1.8]" />
-              {mounted && totalItems > 0 && (
+              {totalItems > 0 && (
                 <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2D5A43] text-[9px] font-bold text-white shadow-xs">
                   {totalItems}
                 </span>
@@ -568,7 +555,7 @@ export default function ShopNavbar() {
                 onClick={toggleMenu}
                 className="block py-1.5 text-[15px] text-stone-500 hover:text-stone-700 font-normal transition-colors"
               >
-                Men's fertility
+                Men&apos;s fertility
               </Link>
 
               <Link
